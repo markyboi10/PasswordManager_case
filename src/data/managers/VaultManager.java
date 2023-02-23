@@ -23,7 +23,7 @@ public class VaultManager implements Manager {
 
     // Constructor
     public VaultManager() {
-        
+
     }
 
     @Override
@@ -44,6 +44,50 @@ public class VaultManager implements Manager {
         }
     } // End 'init' method
 
+    /**
+     * Adds an account to the vault
+     *
+     * @param salt
+     * @param username
+     * @param password
+     * @param iv
+     * @param url
+     */
+    public void addAccountToVault(String salt, String username, String password, String iv, String url) {
+
+        // Check for a vault already existing
+        VaultValue vaultValue = getVault(salt);
+        if (vaultValue == null) { // If the vault does not exist, create one
+            vaultValue = new VaultValue(salt, new Accounts());
+            vault.add(vaultValue); // Add the new vault to vaults
+        }
+
+        // Create the account
+        AccountValue photo = new AccountValue(
+                username, password, iv, url
+        );
+
+        // Add the account to vault.accounts()
+        vaultValue.getSalt().add(photo);
+        sendJSON(new File(FILE_NAME));
+    }
+
+    /**
+     *
+     * @param salt
+     * @return
+     */
+    public VaultValue getVault(String salt) {
+        for (Object n : vault) {
+            if (n instanceof VaultValue m) {
+                if (m.getString("salt").equalsIgnoreCase(salt)) {
+                    return m;
+                }
+            }
+        }
+        return null; // If no vault is found return null
+    }
+
     @Override
     public String getJSON() {
         return vault.getFormattedJSON();
@@ -51,7 +95,7 @@ public class VaultManager implements Manager {
 
     /*
     Loads JSON file
-    */
+     */
     @Override
     public void loadJSON(File file) {
 
@@ -90,20 +134,18 @@ public class VaultManager implements Manager {
                                     pObj.getString("password"),
                                     pObj.getString("iv"),
                                     pObj.getString("url")
-                                 
                             );
 
-          
                             photos.add(photo); // Add the account to accounts
-                            
+
                         } // End inner-if
-                        
+
                     } // End inner-for
 
                     this.vault.add(collection); // Add the vault to gloabl vaults
-                    
+
                 } // End outer-if
-                
+
             } // End outer-for
 
         } catch (IOException e) {
@@ -115,7 +157,7 @@ public class VaultManager implements Manager {
     /*
     Writes JSON out to project
     directory
-    */
+     */
     @Override
     public void sendJSON(File file) {
         try {
@@ -123,13 +165,13 @@ public class VaultManager implements Manager {
                 file.createNewFile();
             }
             // Write formatted json to FILE
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            try ( BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write(getJSON());
-            } 
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } // End try-catch
-        
+
     } // End 'sendJSON' method
 
 } // End class 'VaultManager'
