@@ -1,0 +1,67 @@
+[
+   {
+      "salt" : "evk+aFczU8DQAyYrDYrX+w==",
+      "accounts" : [
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "bob"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "bob"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "bob"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "bob"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "bob"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "max"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "bob"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "max"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "bob"
+         },
+         {
+            "password" : "thENIJTkCwZ3B5oNLomJQgLMllqGrnI=",
+            "iv" : "Peuslavh1IPQNUtMSFTcug==",
+            "url" : "merrimack.edu",
+            "username" : "max"
+         }
+      ]
+   }
+]

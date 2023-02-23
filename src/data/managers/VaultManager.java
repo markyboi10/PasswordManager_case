@@ -1,0 +1,135 @@
+package data.managers;
+
+import csc3055.json.parser.JSONParser;
+import csc3055.json.parser.ast.SyntaxTree;
+import csc3055.json.parser.ast.nodes.SyntaxNode;
+import csc3055.json.types.JSONArray;
+import csc3055.json.types.JSONObject;
+import data.Vault;
+
+import data.Accounts;
+import data.objects.VaultValue;
+import data.objects.AccountValue;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class VaultManager implements Manager {
+
+    // Objects
+    private Vault vault;
+    private final String FILE_NAME = "vault.json";
+
+    // Constructor
+    public VaultManager() {
+        
+    }
+
+    @Override
+    public void init() throws IOException {
+
+        // Initialize vault
+        vault = new Vault();
+
+        // Determine if file exists
+        File file = new File(FILE_NAME);
+
+        // If not, create file
+        if (!file.exists() || !file.isFile()) {
+            file.createNewFile();
+        } // Else load file into publicKeyRing
+        else {
+            loadJSON(file);
+        }
+    } // End 'init' method
+
+    @Override
+    public String getJSON() {
+        return vault.getFormattedJSON();
+    }
+
+    /*
+    Loads JSON file
+    */
+    @Override
+    public void loadJSON(File file) {
+
+        try {
+            if (!file.exists() || !file.isFile()) {
+                file.createNewFile();
+            }
+
+            // Read JSON into the vault
+            JSONParser jsonParser = new JSONParser(file);
+            SyntaxTree tree = jsonParser.parse();
+
+            // Root is a JSONArray vault
+            SyntaxNode root = tree.getRootNode();
+
+            // Tree did not load, file has not been constructed yet.
+            if (root == null) {
+                return;
+            }
+
+            JSONArray collections = (JSONArray) root.evaluate();
+
+            // Load in all vaults
+            for (Object n : collections) {
+                if (n instanceof JSONObject m) { // Create collection m
+                    Accounts photos = new Accounts();
+                    VaultValue collection = new VaultValue(m.getString("salt"), photos);
+
+                    // Load in all accounts
+                    JSONArray photosArray = m.getArray("accounts");
+                    for (Object q : photosArray) {
+                        if (q instanceof JSONObject pObj) { // Create an account
+
+                            AccountValue photo = new AccountValue(
+                                    pObj.getString("username"),
+                                    pObj.getString("password"),
+                                    pObj.getString("iv"),
+                                    pObj.getString("url")
+                                 
+                            );
+
+          
+                            photos.add(photo); // Add the account to accounts
+                            
+                        } // End inner-if
+                        
+                    } // End inner-for
+
+                    this.vault.add(collection); // Add the vault to gloabl vaults
+                    
+                } // End outer-if
+                
+            } // End outer-for
+
+        } catch (IOException e) {
+            System.out.println("IOException, line 149");
+        } // End try-catch
+
+    } // End 'loadJSON' method
+
+    /*
+    Writes JSON out to project
+    directory
+    */
+    @Override
+    public void sendJSON(File file) {
+        try {
+            if (!file.exists() || !file.isFile()) {
+                file.createNewFile();
+            }
+            // Write formatted json to FILE
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(getJSON());
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        } // End try-catch
+        
+    } // End 'sendJSON' method
+
+} // End class 'VaultManager'
