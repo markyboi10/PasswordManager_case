@@ -57,7 +57,7 @@ public class Main {
             System.out.println(vaultManager.getJSON());
             String url_name = "google.com";
 
-            System.out.println("Values from url:" + vaultManager.getAccountFromVault(vaultManager.getVault(saltString), url_name));
+           System.out.println("Values from url:" + vaultManager.getAccountFromVault(vaultManager.getVault(saltString), url_name));
             try {
                 Scrypt_And_Encrypt.scrypt_and_encrypt(); // Call encryption
                 
