@@ -18,7 +18,7 @@ import java.io.IOException;
 public class VaultManager implements Manager {
 
     // Objects
-    private Vault vault;
+    public Vault vault;
     private final String FILE_NAME = "vault.json";
 
     // Constructor
@@ -71,6 +71,48 @@ public class VaultManager implements Manager {
         vaultValue.getSalt().add(photo);
         sendJSON(new File(FILE_NAME));
     }
+    
+    /**
+     * Finds a photo from a collection & photo_name
+     *
+     * @param vault
+     * @param url_name
+     * @return
+     */
+    public AccountValue getAccountFromVault(VaultValue vault, String url_name) {
+        for (Object n : vault.getSalt()) {
+            if (n instanceof AccountValue m) {
+                if (m.getUrl().equalsIgnoreCase(url_name)) { // If the url is found, break
+                    return m;
+                }
+            }
+        }
+        System.out.println("URL not found in JSON");
+        return null; // If no url is found, return null
+    }
+    
+//        /**
+//     * Gets a photo from a {@code photo_file_name} name
+//     *
+//     * @param photo_file_name
+//     * @return
+//     */
+//    public AccountValue getPhoto(String url) {
+//
+//        for (Object n : vault) {
+//            if (n instanceof CollectionValue m) {
+//                for (Object q : m.getPhotos()) {
+//                    if (q instanceof PhotoValue photoValue) {
+//                        if (photoValue.getFileName().equalsIgnoreCase(photo_file_name)) {
+//                            return photoValue;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return null;
+//    }
 
     /**
      *

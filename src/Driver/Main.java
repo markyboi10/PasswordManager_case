@@ -1,6 +1,7 @@
 package Driver;
 
 import data.managers.VaultManager;
+import data.objects.VaultValue;
 
 import lombok.Getter;
 
@@ -28,7 +29,7 @@ public class Main {
     @Getter
     // Vault Manager
     public static VaultManager vaultManager;
-
+    public static VaultValue vault;
     public static void main(String[] args) {
         /**
          * Initialize manager
@@ -38,10 +39,12 @@ public class Main {
             vaultManager = new VaultManager();
             vaultManager.init();
 
-    
+
             //String salt, String username, String password, String iv, String url
 
             System.out.println(vaultManager.getJSON());
+            String url_name = "google.com";
+            System.out.println("Values from url:" + vaultManager.getAccountFromVault(vaultManager.getVault("FKVyanotUURZ3OUFLl18gw="), url_name));
             try {
                 Scrypt_And_Encrypt.scrypt_and_encrypt(); // Call encryption
                 
