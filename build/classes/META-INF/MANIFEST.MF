@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.10.8
+Created-By: 16.0.2+7-67 (Oracle Corporation)
+Class-Path: lib/bcprov-jdk18on-172.jar lib/com.fasterxml.jackson.datab
+ ind.jar lib/csc3055.jar lib/jackson-annotations-2.1.2.jar lib/jackson
+ -core-2.14.2.jar lib/KGradientPanel.jar lib/lombok.jar lib/commons-la
+ ng3-3.12.0.jar
+X-COMMENT: Main-Class will be added automatically by build
+Main-Class: Driver.Main
+
