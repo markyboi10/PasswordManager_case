@@ -90,29 +90,6 @@ public class VaultManager implements Manager {
         System.out.println("URL not found in JSON");
         return null; // If no url is found, return null
     }
-    
-//        /**
-//     * Gets a photo from a {@code photo_file_name} name
-//     *
-//     * @param photo_file_name
-//     * @return
-//     */
-//    public AccountValue getPhoto(String url) {
-//
-//        for (Object n : vault) {
-//            if (n instanceof CollectionValue m) {
-//                for (Object q : m.getPhotos()) {
-//                    if (q instanceof PhotoValue photoValue) {
-//                        if (photoValue.getFileName().equalsIgnoreCase(photo_file_name)) {
-//                            return photoValue;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        return null;
-//    }
 
     /**
      *

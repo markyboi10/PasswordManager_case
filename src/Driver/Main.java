@@ -2,6 +2,10 @@ package Driver;
 
 import data.managers.VaultManager;
 import data.objects.VaultValue;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 
 import lombok.Getter;
 
@@ -9,6 +13,7 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -30,6 +35,8 @@ public class Main {
     // Vault Manager
     public static VaultManager vaultManager;
     public static VaultValue vault;
+     private static final String SALT_FILE = "C:\\Users\\Mark Case\\Documents\\NetBeansProjects\\PasswordManager\\test\\salt.txt";
+     public static String saltString = null;
     public static void main(String[] args) {
         /**
          * Initialize manager
@@ -39,17 +46,22 @@ public class Main {
             vaultManager = new VaultManager();
             vaultManager.init();
 
-
-            //String salt, String username, String password, String iv, String url
-
+            // Load the salt(iv) if the file exits
+            File saltFile = new File(SALT_FILE);
+            if (saltFile.exists()) {
+                BufferedReader reader = new BufferedReader(new FileReader(saltFile));
+                saltString = reader.readLine();
+                //globalSalt = Base64.getDecoder().decode(saltString);
+            }
+            
             System.out.println(vaultManager.getJSON());
             String url_name = "google.com";
-            System.out.println("Values from url:" + vaultManager.getAccountFromVault(vaultManager.getVault("FKVyanotUURZ3OUFLl18gw="), url_name));
+
+            System.out.println("Values from url:" + vaultManager.getAccountFromVault(vaultManager.getVault(saltString), url_name));
             try {
                 Scrypt_And_Encrypt.scrypt_and_encrypt(); // Call encryption
                 
-               // byte[] globalSalt = Scrypt_And_Encrypt.getGlobalSalt(); // Grab salt from file
-                //String salt = Base64.getEncoder().encodeToString(globalSalt); // Convert to string
+
                 
                 ArrayList encryptedValues = Scrypt_And_Encrypt.getEncryptedValues();
 

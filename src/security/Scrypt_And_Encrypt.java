@@ -156,9 +156,9 @@ public class Scrypt_And_Encrypt {
         return encryptedValues;
     }
 
-    public static byte[] getGlobalSalt() {
-        return globalSalt;
-    }
+//    public static byte[] getGlobalSalt() {
+//        return globalSalt;
+//    }
 
     
     
