@@ -38,10 +38,13 @@ public class Scrypt_And_Encrypt {
     // Name of file where salt(iv) is stored
     private static final String SALT_FILE = "C:\\Users\\Mark Case\\Documents\\NetBeansProjects\\PasswordManager\\test\\salt.txt";
     private static ArrayList encryptedValues = new ArrayList();
-    public static String c;
-    public static String k;
-    public static String i;
-    public static String s;
+    public static byte[] globalSalt = null;
+    public static String username = null;
+    public static String url = null;
+//    public static String c;
+//    public static String k;
+//    public static String i;
+//    public static String s;
     // Test main
     public static ArrayList scrypt_and_encrypt() throws NoSuchAlgorithmException, InvalidKeySpecException,
             NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
@@ -53,7 +56,7 @@ public class Scrypt_And_Encrypt {
         Scanner in = new Scanner(System.in); // Scanner obj for salt.txt
         Console cons = System.console(); // Used to get copy of console
         String password; // password input intiialization
-        byte[] salt; // salt(iv) initialization
+        //byte[] salt; // salt(iv) initialization
 
         // Default values given by project description
         final int cost = 2048; // Iterations
@@ -72,8 +75,13 @@ public class Scrypt_And_Encrypt {
         if (cons != null) {
             password = new String(cons.readPassword("Enter a password: "));
         } else {
+            System.out.println("Enter a URL: ");
+            url = in.next();
+            System.out.println("Enter a username: ");
+            username = in.next();
             System.out.print("Enter a password: ");
             password = in.next();
+            
         } // End if
 
         // Load the salt(iv) if the file exits
@@ -81,14 +89,14 @@ public class Scrypt_And_Encrypt {
         if (saltFile.exists()) {
             BufferedReader reader = new BufferedReader(new FileReader(saltFile));
             String saltString = reader.readLine();
-            salt = Base64.getDecoder().decode(saltString);
+            globalSalt = Base64.getDecoder().decode(saltString);
         } else { // If it doesn't exist, create one and populate salt.txt
-            salt = new byte[16]; // 16 byte IV for an AES key
+            globalSalt = new byte[16]; // 16 byte IV for an AES key
             SecureRandom rand = new SecureRandom();
-            rand.nextBytes(salt);
+            rand.nextBytes(globalSalt);
 
             try ( FileOutputStream outStream = new FileOutputStream(saltFile)) {
-                outStream.write(Base64.getEncoder().encodeToString(salt).getBytes()); // Write out as encoded string
+                outStream.write(Base64.getEncoder().encodeToString(globalSalt).getBytes()); // Write out as encoded string
             } // End try
 
         } // End if
@@ -99,7 +107,7 @@ public class Scrypt_And_Encrypt {
         128 * cost * blockSize * parallelization
         the password arg expects array of chars NOT bytes
          */
-        scryptSpec = new ScryptKeySpec(password.toCharArray(), salt, cost, blockSize, parallelization, keySize);
+        scryptSpec = new ScryptKeySpec(password.toCharArray(), globalSalt, cost, blockSize, parallelization, keySize);
         // Generate the key
         SecretKey key = SecretKeyFactory.getInstance("SCRYPT").generateSecret(scryptSpec);
 
@@ -122,18 +130,22 @@ public class Scrypt_And_Encrypt {
         // Output the result
         System.out.println("Ciphertext: " + Base64.getEncoder().encodeToString(ciphertext));
         System.out.println("Key: " + Base64.getEncoder().encodeToString(key.getEncoded()));
-        System.out.println("Salt: " + Base64.getEncoder().encodeToString(salt));
+        System.out.println("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
         System.out.println("IV: " + Base64.getEncoder().encodeToString(rawIv));
         System.out.println("Tag Size: " + tagSize + " bits.");
         
+        encryptedValues.add("URL: " + url);
+        encryptedValues.add("Username: " + username); 
         encryptedValues.add("Cipher text: " + Base64.getEncoder().encodeToString(ciphertext));
         encryptedValues.add("Key : " + Base64.getEncoder().encodeToString(key.getEncoded()));
         encryptedValues.add("IV: " + Base64.getEncoder().encodeToString(rawIv));
+        encryptedValues.add("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
+       
         
-        c = Base64.getEncoder().encodeToString(ciphertext); // ciphertext
-        k = Base64.getEncoder().encodeToString(key.getEncoded()); // aes key
-        i = Base64.getEncoder().encodeToString(rawIv); // raw iv
-        s = Base64.getEncoder().encodeToString(salt); //  salt
+//        c = Base64.getEncoder().encodeToString(ciphertext); // ciphertext
+//        k = Base64.getEncoder().encodeToString(key.getEncoded()); // aes key
+//        i = Base64.getEncoder().encodeToString(rawIv); // raw iv
+//        s = Base64.getEncoder().encodeToString(salt); //  salt
         
         return encryptedValues;
 
@@ -142,6 +154,10 @@ public class Scrypt_And_Encrypt {
 
     public static ArrayList getEncryptedValues() {
         return encryptedValues;
+    }
+
+    public static byte[] getGlobalSalt() {
+        return globalSalt;
     }
 
     
