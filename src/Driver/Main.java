@@ -1,5 +1,6 @@
 package Driver;
 
+import UI.myGUI;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import data.managers.VaultManager;
@@ -63,42 +64,70 @@ public class Main {
 
         } // End if
 
+                /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(myGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(myGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(myGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(myGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new myGUI().setVisible(true);
+        });
+
         /*
         Encryption and decryptin console calls
         */
-        try {
-            Scrypt_And_Encrypt.scrypt_and_encrypt(); // Call encryption
-
-            ArrayList encryptedValues = Scrypt_And_Encrypt.getEncryptedValues(); // Grab return array from scrypt_and_encrypt
-
-            /*
-            Parse the returned array
-            */
-            String joinedString = String.join(",", encryptedValues);
-            // Remove the brackets and split the string by comma
-            String[] values = joinedString.substring(1, joinedString.length()).split(",");
-            // Extract the values by splitting each string by colon and stripping the white spaces
-            String url = values[0].split(":")[1].trim();
-            String username = values[1].split(":")[1].trim();
-            String cipherText = values[2].split(":")[1].trim();
-            String key = values[3].split(":")[1].trim(); // Not used rn
-            String iv = values[4].split(":")[1].trim();
-            String salt = values[5].split(":")[1].trim();
-            System.out.println("");
-            System.out.println("```");
-            System.out.println("The return array: " + encryptedValues);
-            System.out.println("```");
-            System.out.println("");
-            /*
-             Pass parameters from returned array, this updates the vault with new account info
-             */
-            vaultManager.addAccountToVault(salt, username, cipherText, iv, url); 
-
-            Scrypt_And_Encrypt.decrypt(cipherText, key, iv); // Test decryption call, currently works through console and user input
-
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+////            Scrypt_And_Encrypt.scrypt_and_encrypt(); // Call encryption
+//
+////            ArrayList encryptedValues = Scrypt_And_Encrypt.getEncryptedValues(); // Grab return array from scrypt_and_encrypt
+////
+////            /*
+////            Parse the returned array
+////            */
+////            String joinedString = String.join(",", encryptedValues);
+////            // Remove the brackets and split the string by comma
+////            String[] values = joinedString.substring(1, joinedString.length()).split(",");
+////            // Extract the values by splitting each string by colon and stripping the white spaces
+////            String url = values[0].split(":")[1].trim();
+////            String username = values[1].split(":")[1].trim();
+////            String cipherText = values[2].split(":")[1].trim();
+////            String key = values[3].split(":")[1].trim(); // Not used rn
+////            String iv = values[4].split(":")[1].trim();
+////            String salt = values[5].split(":")[1].trim();
+////            System.out.println("");
+////            System.out.println("```");
+////            System.out.println("The return array: " + encryptedValues);
+////            System.out.println("```");
+////            System.out.println("");
+////            /*
+////             Pass parameters from returned array, this updates the vault with new account info
+////             */
+////            vaultManager.addAccountToVault(salt, username, cipherText, iv, url); 
+//              vaultManager.getAccountFromVault(vaultManager.getVault(saltString), saltString);
+//            Scrypt_And_Encrypt.decrypt(cipherText, key, iv); // Test decryption call, currently works through console and user input
+//
+//        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException ex) {
+//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
         //}
     } // End 'main' method

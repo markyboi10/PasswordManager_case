@@ -37,13 +37,15 @@ public class Scrypt_And_Encrypt {
     public static byte[] globalSalt = null; // Global variable for salt val
     private static String username = null;
     private static String url = null;
-    private static String password = null;
+      private static String password = null;
     private static String res = null;
 
-    public static ArrayList scrypt_and_encrypt() throws NoSuchAlgorithmException, InvalidKeySpecException,
+    public static ArrayList scrypt_and_encrypt(String newURL, String newUser, String newPassword) throws NoSuchAlgorithmException, InvalidKeySpecException,
             NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
             BadPaddingException, IOException {
-
+        url = newURL;
+        username = newUser;
+        password = newPassword;
         /* 
         Objects
          */
@@ -62,46 +64,46 @@ public class Scrypt_And_Encrypt {
 
         // Register bouncy castle provider.
         Security.addProvider(new BouncyCastleProvider());
-
-        /*
-        Prompt user for a password
-         */
-        if (cons != null) {
-            System.out.println("Enter a URL: ");
-            url = cons.readLine();
-            //cons.readLine(); // consume the newline character
-            System.out.println("Enter a username: ");
-            username = cons.readLine();
-            System.out.println("Do you want to randomly generate a password? (Y/N)");
-            res = cons.readLine();
-            if (res.toUpperCase().equals("Y")) {
-                char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
-                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
-                System.out.println(randomStr);
-                password = randomStr;
-            } else {
-                // Password doesn't not echo to console so user must input right next to print statment. (Extra security)
-                char[] passwordChars = cons.readPassword("Enter a password: ");
-                password = new String(passwordChars);
-            }
-        } else {
-            System.out.println("Enter a URL: ");
-            url = in.next();
-            System.out.println("Enter a username: ");
-            username = in.next();
-            System.out.println("Do you want to randomly generate a password? (Y/N)");
-            res = in.next();
-            if (res.toUpperCase().equals("Y")) {
-                char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
-                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
-                System.out.println(randomStr);
-                password = randomStr;
-            } else {
-                System.out.print("Enter a password: ");
-                password = in.next();
-                System.out.print("");
-            }
-        }
+//
+//        /*
+//        Prompt user for a password
+//         */
+//        if (cons != null) {
+//            System.out.println("Enter a URL: ");
+//            url = cons.readLine();
+//            //cons.readLine(); // consume the newline character
+//            System.out.println("Enter a username: ");
+//            username = cons.readLine();
+//            System.out.println("Do you want to randomly generate a password? (Y/N)");
+//            res = cons.readLine();
+//            if (res.toUpperCase().equals("Y")) {
+//                char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
+//                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
+//                System.out.println(randomStr);
+//                password = randomStr;
+//            } else {
+//                // Password doesn't not echo to console so user must input right next to print statment. (Extra security)
+//                char[] passwordChars = cons.readPassword("Enter a password: ");
+//                password = new String(passwordChars);
+//            }
+//        } else {
+//            System.out.println("Enter a URL: ");
+//            url = in.next();
+//            System.out.println("Enter a username: ");
+//            username = in.next();
+//            System.out.println("Do you want to randomly generate a password? (Y/N)");
+//            res = in.next();
+//            if (res.toUpperCase().equals("Y")) {
+//                char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
+//                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
+//                System.out.println(randomStr);
+//                password = randomStr;
+//            } else {
+//                System.out.print("Enter a password: ");
+//                password = in.next();
+//                System.out.print("");
+//            }
+//        }
 
         /*
         Derive the AES key from password using the password
