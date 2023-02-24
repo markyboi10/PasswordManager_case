@@ -109,6 +109,7 @@ public class Scrypt_And_Encrypt {
         byte[] ciphertext = aesCipher.doFinal(msg.getBytes(StandardCharsets.US_ASCII));
 
         // Output the result
+        System.out.println("");
         System.out.println("Ciphertext: " + Base64.getEncoder().encodeToString(ciphertext));
         System.out.println("Key: " + Base64.getEncoder().encodeToString(key.getEncoded()));
         System.out.println("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
@@ -126,29 +127,29 @@ public class Scrypt_And_Encrypt {
 
     } // End 'main' method
     
-    public static void decrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, AEADBadTagException {
-		String key; // The Base64 encoded key.
-		String ciphertext; // The Base64 encoded ciphertext.
-		String iv; // The initialization vector.
+    public static void decrypt(String ct, String key, String IV) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, AEADBadTagException {
+//		String key; // The Base64 encoded key.
+//		String ciphertext; // The Base64 encoded ciphertext.
+//		String iv; // The initialization vector.
 		int tagSize = 128; // 128-bit authentication tag.
 
 		// Set up an AES cipher object.
 		Cipher aesCipher = Cipher.getInstance("AES/GCM/NoPadding");
 
-		// Setup the input scanner.
-		Scanner input = new Scanner(System.in);
-
-		// Prompt for the ciphertext.
-		System.out.print("Please enter ciphertext: ");
-		ciphertext = input.nextLine();
-
-		// Prompt for the key.
-		System.out.print("Please enter the secret key: ");
-		key = input.nextLine();
-
-		// Prompt for the IV.
-		System.out.print("Please enter the IV: ");
-		iv = input.nextLine();
+//		// Setup the input scanner.
+//		Scanner input = new Scanner(System.in);
+//
+//		// Prompt for the ciphertext.
+//		System.out.print("Please enter ciphertext: ");
+//		ciphertext = input.nextLine();
+//
+//		// Prompt for the key.
+//		System.out.print("Please enter the secret key: ");
+//		key = input.nextLine();
+//
+//		// Prompt for the IV.
+//		System.out.print("Please enter the IV: ");
+//		iv = input.nextLine();
 
 		// Setup the key.
 		SecretKeySpec aesKey = new SecretKeySpec(Base64.getDecoder().decode(key),
@@ -156,10 +157,10 @@ public class Scrypt_And_Encrypt {
 
 		// Put the cipher in encrypt mode with the specified key.
 		aesCipher.init(Cipher.DECRYPT_MODE, aesKey,
-		    new GCMParameterSpec(tagSize, Base64.getDecoder().decode(iv)));
+		    new GCMParameterSpec(tagSize, Base64.getDecoder().decode(IV)));
 
 		// Finalize the message.
-		byte[] plaintext = aesCipher.doFinal(Base64.getDecoder().decode(ciphertext));
+		byte[] plaintext = aesCipher.doFinal(Base64.getDecoder().decode(ct));
 
         System.out.println("Original password: " + new String(plaintext));
 

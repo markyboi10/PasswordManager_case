@@ -94,7 +94,7 @@ public class Main {
              */
             vaultManager.addAccountToVault(salt, username, cipherText, iv, url); 
 
-            Scrypt_And_Encrypt.decrypt(); // Test decryption call, currently works through console and user input
+            Scrypt_And_Encrypt.decrypt(cipherText, key, iv); // Test decryption call, currently works through console and user input
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
