@@ -9,6 +9,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -44,7 +45,15 @@ public class Main {
 
             System.out.println(vaultManager.getJSON());
             try {
-                System.out.println(Scrypt_And_Encrypt.scrypt_and_encrypt());
+                Scrypt_And_Encrypt.scrypt_and_encrypt();
+                System.out.println(Scrypt_And_Encrypt.getEncryptedValues());
+                    Scrypt_And_Encrypt.decrypt();
+                
+     //           String plaintext = Scrypt_And_Encrypt.decrypt(Scrypt_And_Encrypt.getC(), Scrypt_And_Encrypt.getK(), Scrypt_And_Encrypt.getS(), Scrypt_And_Encrypt.getI());
+//System.out.println("Plaintext: " + plaintext);
+                
+                
+               // System.out.println(Scrypt_And_Encrypt.decrypt(Scrypt_And_Encrypt.getEncryptedValues(), password));
             } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
