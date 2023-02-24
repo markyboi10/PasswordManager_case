@@ -22,6 +22,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.Getter;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /*
 Bouncy castle imports
@@ -37,6 +38,7 @@ public class Scrypt_And_Encrypt {
     private static String username = null;
     private static String url = null;
     private static String password = null;
+    private static String res = null;
 
     public static ArrayList scrypt_and_encrypt() throws NoSuchAlgorithmException, InvalidKeySpecException,
             NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
@@ -69,18 +71,36 @@ public class Scrypt_And_Encrypt {
             url = cons.readLine();
             //cons.readLine(); // consume the newline character
             System.out.println("Enter a username: ");
-            username = cons.readLine(); 
-            // Password doesn't not echo to console so user must input right next to print statment. (Extra security)
-            char[] passwordChars = cons.readPassword("Enter a password: ");
-            password = new String(passwordChars);
+            username = cons.readLine();
+            System.out.println("Do you want to randomly generate a password? (Y/N)");
+            res = cons.readLine();
+            if (res.toUpperCase().equals("Y")) {
+                char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
+                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
+                System.out.println(randomStr);
+                password = randomStr;
+            } else {
+                // Password doesn't not echo to console so user must input right next to print statment. (Extra security)
+                char[] passwordChars = cons.readPassword("Enter a password: ");
+                password = new String(passwordChars);
+            }
         } else {
             System.out.println("Enter a URL: ");
             url = in.next();
             System.out.println("Enter a username: ");
             username = in.next();
-            System.out.print("Enter a password: ");
-            password = in.next();
-            System.out.print("");
+            System.out.println("Do you want to randomly generate a password? (Y/N)");
+            res = in.next();
+            if (res.toUpperCase().equals("Y")) {
+                char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
+                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
+                System.out.println(randomStr);
+                password = randomStr;
+            } else {
+                System.out.print("Enter a password: ");
+                password = in.next();
+                System.out.print("");
+            }
         }
 
         /*
@@ -95,14 +115,13 @@ public class Scrypt_And_Encrypt {
 
         // Encrypt using GCM
         Cipher aesCipher = Cipher.getInstance("AES/GCM/NoPadding");
-        
-        
+
         // Generate the IV.
         SecureRandom rand = new SecureRandom();
         byte[] rawIv = new byte[16];		// Block size of AES.
         rand.nextBytes(rawIv);					// Fill the array with random bytes.
         GCMParameterSpec gcmParams = new GCMParameterSpec(tagSize, rawIv);
-        
+
         // Encrypt mode, passes in aes(salt gen.) key + (tag size, rawIV)
         aesCipher.init(Cipher.ENCRYPT_MODE, key, gcmParams);
         String msg = password;
@@ -115,26 +134,26 @@ public class Scrypt_And_Encrypt {
         System.out.println("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
         System.out.println("IV: " + Base64.getEncoder().encodeToString(rawIv));
         System.out.println("Tag Size: " + tagSize + " bits.");
-        
+
         encryptedValues.add("URL: " + url);
-        encryptedValues.add("Username: " + username); 
+        encryptedValues.add("Username: " + username);
         encryptedValues.add("Cipher text: " + Base64.getEncoder().encodeToString(ciphertext));
         encryptedValues.add("Key : " + Base64.getEncoder().encodeToString(key.getEncoded()));
         encryptedValues.add("IV: " + Base64.getEncoder().encodeToString(rawIv));
         encryptedValues.add("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
-        
+
         return encryptedValues;
 
     } // End 'main' method
-    
+
     public static void decrypt(String ct, String key, String IV) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, AEADBadTagException {
 //		String key; // The Base64 encoded key.
 //		String ciphertext; // The Base64 encoded ciphertext.
 //		String iv; // The initialization vector.
-		int tagSize = 128; // 128-bit authentication tag.
+        int tagSize = 128; // 128-bit authentication tag.
 
-		// Set up an AES cipher object.
-		Cipher aesCipher = Cipher.getInstance("AES/GCM/NoPadding");
+        // Set up an AES cipher object.
+        Cipher aesCipher = Cipher.getInstance("AES/GCM/NoPadding");
 
 //		// Setup the input scanner.
 //		Scanner input = new Scanner(System.in);
@@ -150,20 +169,19 @@ public class Scrypt_And_Encrypt {
 //		// Prompt for the IV.
 //		System.out.print("Please enter the IV: ");
 //		iv = input.nextLine();
+        // Setup the key.
+        SecretKeySpec aesKey = new SecretKeySpec(Base64.getDecoder().decode(key),
+                "AES");
 
-		// Setup the key.
-		SecretKeySpec aesKey = new SecretKeySpec(Base64.getDecoder().decode(key),
-		    "AES");
+        // Put the cipher in encrypt mode with the specified key.
+        aesCipher.init(Cipher.DECRYPT_MODE, aesKey,
+                new GCMParameterSpec(tagSize, Base64.getDecoder().decode(IV)));
 
-		// Put the cipher in encrypt mode with the specified key.
-		aesCipher.init(Cipher.DECRYPT_MODE, aesKey,
-		    new GCMParameterSpec(tagSize, Base64.getDecoder().decode(IV)));
-
-		// Finalize the message.
-		byte[] plaintext = aesCipher.doFinal(Base64.getDecoder().decode(ct));
+        // Finalize the message.
+        byte[] plaintext = aesCipher.doFinal(Base64.getDecoder().decode(ct));
 
         System.out.println("Original password: " + new String(plaintext));
 
-	} // End 'decrypt' method
+    } // End 'decrypt' method
 
 } // End 'Scrypt_And_Encrypt' class
