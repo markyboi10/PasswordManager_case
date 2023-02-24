@@ -13,6 +13,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Scanner;
 import javax.crypto.BadPaddingException;
@@ -33,9 +35,9 @@ public class Scrypt_And_Encrypt {
 
     // Name of file where salt(iv) is stored
     private static final String SALT_FILE = "C:\\Users\\Mark Case\\Documents\\NetBeansProjects\\PasswordManager\\test\\salt.txt";
-
+    private static ArrayList encryptedValues = new ArrayList();
     // Test main
-    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException,
+    public static ArrayList scrypt_and_encrypt() throws NoSuchAlgorithmException, InvalidKeySpecException,
             NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
             BadPaddingException, IOException {
 
@@ -106,6 +108,12 @@ public class Scrypt_And_Encrypt {
         System.out.println("Key: " + Base64.getEncoder().encodeToString(key.getEncoded()));
         System.out.println("IV: " + Base64.getEncoder().encodeToString(iv));
         System.out.println("Tag Size: " + tagSize + " bits.");
+        
+        encryptedValues.add("Cipher text: " + Base64.getEncoder().encodeToString(ciphertext));
+        encryptedValues.add("Key : " + Base64.getEncoder().encodeToString(key.getEncoded()));
+        encryptedValues.add("IV: " + Base64.getEncoder().encodeToString(iv));
+        
+        return encryptedValues;
 
     } // End 'main' method
 
