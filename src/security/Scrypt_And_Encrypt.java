@@ -1,10 +1,6 @@
 package security;
 
-import java.io.BufferedReader;
 import java.io.Console;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -14,7 +10,6 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Scanner;
 import javax.crypto.AEADBadTagException;
@@ -26,6 +21,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import lombok.Getter;
 
 /*
 Bouncy castle imports
@@ -35,17 +31,13 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class Scrypt_And_Encrypt {
 
-    // Name of file where salt(iv) is stored
-    private static final String SALT_FILE = "C:\\Users\\Mark Case\\Documents\\NetBeansProjects\\PasswordManager\\test\\salt.txt";
-    private static ArrayList encryptedValues = new ArrayList();
-    public static byte[] globalSalt = null;
-    public static String username = null;
-    public static String url = null;
-//    public static String c;
-//    public static String k;
-//    public static String i;
-//    public static String s;
-    // Test main
+    @Getter
+    private static final ArrayList encryptedValues = new ArrayList();
+    public static byte[] globalSalt = null; // Global variable for salt val
+    private static String username = null;
+    private static String url = null;
+    private static String password = null;
+
     public static ArrayList scrypt_and_encrypt() throws NoSuchAlgorithmException, InvalidKeySpecException,
             NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
             BadPaddingException, IOException {
@@ -55,7 +47,7 @@ public class Scrypt_And_Encrypt {
          */
         Scanner in = new Scanner(System.in); // Scanner obj for salt.txt
         Console cons = System.console(); // Used to get copy of console
-        String password; // password input intiialization
+        //String password; // password input intiialization
         //byte[] salt; // salt(iv) initialization
 
         // Default values given by project description
@@ -73,7 +65,14 @@ public class Scrypt_And_Encrypt {
         Prompt user for a password
          */
         if (cons != null) {
-            password = new String(cons.readPassword("Enter a password: "));
+            System.out.println("Enter a URL: ");
+            url = cons.readLine();
+            //cons.readLine(); // consume the newline character
+            System.out.println("Enter a username: ");
+            username = cons.readLine(); 
+            // Password doesn't not echo to console so user must input right next to print statment. (Extra security)
+            char[] passwordChars = cons.readPassword("Enter a password: ");
+            password = new String(passwordChars);
         } else {
             System.out.println("Enter a URL: ");
             url = in.next();
@@ -81,25 +80,8 @@ public class Scrypt_And_Encrypt {
             username = in.next();
             System.out.print("Enter a password: ");
             password = in.next();
-            
-        } // End if
-
-        // Load the salt(iv) if the file exits
-        File saltFile = new File(SALT_FILE);
-        if (saltFile.exists()) {
-            BufferedReader reader = new BufferedReader(new FileReader(saltFile));
-            String saltString = reader.readLine();
-            globalSalt = Base64.getDecoder().decode(saltString);
-        } else { // If it doesn't exist, create one and populate salt.txt
-            globalSalt = new byte[16]; // 16 byte IV for an AES key
-            SecureRandom rand = new SecureRandom();
-            rand.nextBytes(globalSalt);
-
-            try ( FileOutputStream outStream = new FileOutputStream(saltFile)) {
-                outStream.write(Base64.getEncoder().encodeToString(globalSalt).getBytes()); // Write out as encoded string
-            } // End try
-
-        } // End if
+            System.out.print("");
+        }
 
         /*
         Derive the AES key from password using the password
@@ -116,13 +98,12 @@ public class Scrypt_And_Encrypt {
         
         
         // Generate the IV.
-		SecureRandom rand = new SecureRandom();
-		byte[] rawIv = new byte[16];		// Block size of AES.
-		rand.nextBytes(rawIv);					// Fill the array with random bytes.
-		GCMParameterSpec gcmParams = new GCMParameterSpec(tagSize, rawIv);
+        SecureRandom rand = new SecureRandom();
+        byte[] rawIv = new byte[16];		// Block size of AES.
+        rand.nextBytes(rawIv);					// Fill the array with random bytes.
+        GCMParameterSpec gcmParams = new GCMParameterSpec(tagSize, rawIv);
         
-        
-        
+        // Encrypt mode, passes in aes(salt gen.) key + (tag size, rawIV)
         aesCipher.init(Cipher.ENCRYPT_MODE, key, gcmParams);
         String msg = password;
         byte[] ciphertext = aesCipher.doFinal(msg.getBytes(StandardCharsets.US_ASCII));
@@ -140,38 +121,16 @@ public class Scrypt_And_Encrypt {
         encryptedValues.add("Key : " + Base64.getEncoder().encodeToString(key.getEncoded()));
         encryptedValues.add("IV: " + Base64.getEncoder().encodeToString(rawIv));
         encryptedValues.add("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
-       
-        
-//        c = Base64.getEncoder().encodeToString(ciphertext); // ciphertext
-//        k = Base64.getEncoder().encodeToString(key.getEncoded()); // aes key
-//        i = Base64.getEncoder().encodeToString(rawIv); // raw iv
-//        s = Base64.getEncoder().encodeToString(salt); //  salt
         
         return encryptedValues;
 
     } // End 'main' method
-
-
-    public static ArrayList getEncryptedValues() {
-        return encryptedValues;
-    }
-
-//    public static byte[] getGlobalSalt() {
-//        return globalSalt;
-//    }
-
     
-    
-
-	public static void decrypt() throws
-	    NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-      IllegalBlockSizeException, BadPaddingException,
-			InvalidAlgorithmParameterException, AEADBadTagException
-	{
+    public static void decrypt() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, AEADBadTagException {
 		String key; // The Base64 encoded key.
 		String ciphertext; // The Base64 encoded ciphertext.
-		String iv;	// The initialization vector.
-		int tagSize = 128;		// 128-bit authentication tag.
+		String iv; // The initialization vector.
+		int tagSize = 128; // 128-bit authentication tag.
 
 		// Set up an AES cipher object.
 		Cipher aesCipher = Cipher.getInstance("AES/GCM/NoPadding");
@@ -202,10 +161,8 @@ public class Scrypt_And_Encrypt {
 		// Finalize the message.
 		byte[] plaintext = aesCipher.doFinal(Base64.getDecoder().decode(ciphertext));
 
-    System.out.println("Plaintext: " + new String(plaintext));
+        System.out.println("Original password: " + new String(plaintext));
 
-	}
+	} // End 'decrypt' method
 
-
-    
 } // End 'Scrypt_And_Encrypt' class

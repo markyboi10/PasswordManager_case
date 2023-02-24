@@ -1,0 +1,13 @@
+[
+   {
+      "salt" : "1TID5+A1b+XRKeCKmWShcQ==",
+      "accounts" : [
+         {
+            "password" : "yn/cjZ4kw8i7tky6SyHS8udmFMUPGg==",
+            "iv" : "+sBNA8UPWu7sBNhFQ61JZw==",
+            "url" : "googl.com",
+            "username" : "myUser"
+         }
+      ]
+   }
+]

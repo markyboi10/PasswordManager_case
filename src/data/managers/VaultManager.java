@@ -6,7 +6,6 @@ import csc3055.json.parser.ast.nodes.SyntaxNode;
 import csc3055.json.types.JSONArray;
 import csc3055.json.types.JSONObject;
 import data.Vault;
-
 import data.Accounts;
 import data.objects.VaultValue;
 import data.objects.AccountValue;
@@ -14,12 +13,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import lombok.Getter;
 
 public class VaultManager implements Manager {
 
     // Objects
     public Vault vault;
-    private final String FILE_NAME = "vault.json";
+    @Getter
+    public static String FILE_NAME = "vault.json";
 
     // Constructor
     public VaultManager() {
