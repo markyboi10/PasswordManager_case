@@ -4,11 +4,16 @@
  */
 package UI;
 
+//import static Driver.Main.saltString;
 import Driver.Main;
 import static Driver.Main.saltString;
 import static Driver.Main.vaultManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import data.managers.VaultManager;
 import data.objects.AccountValue;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -16,14 +21,18 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import org.apache.commons.lang3.RandomStringUtils;
 import security.Scrypt_And_Encrypt;
+import static security.Scrypt_And_Encrypt.globalSalt;
+import security.SecureKeyStore;
 
 /**
  *
@@ -34,7 +43,9 @@ public class myGUI extends javax.swing.JFrame {
     private static String newURL = null;
     private static String newUser = null;
     private static String newPassword = null;
+    private static String salt;
     List<AccountValue> users = new ArrayList<>();
+    File vaultFile = new File(VaultManager.getFILE_NAME());
     /**
      * Creates new form myGUI
      */
@@ -208,11 +219,12 @@ public class myGUI extends javax.swing.JFrame {
                     .addComponent(newAccount_label)
                     .addComponent(findExistingAccountDetails_label))
                 .addGap(18, 18, 18)
-                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(newWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(existingWebsite_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(existingWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(existingWebsite_label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(newWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(existingWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(root_paneLayout.createSequentialGroup()
                         .addGap(56, 56, 56)
@@ -279,7 +291,7 @@ public class myGUI extends javax.swing.JFrame {
             String cipherText = values[2].split(":")[1].trim();
             String key = values[3].split(":")[1].trim(); // Not used rn
             String iv = values[4].split(":")[1].trim();
-            String salt = values[5].split(":")[1].trim();
+            salt = values[5].split(":")[1].trim();
             System.out.println("");
             System.out.println("```");
             System.out.println("The return array: " + encryptedValues);
@@ -312,18 +324,53 @@ public class myGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_generatePassword_btnActionPerformed
 
     private void existingWebsite_textFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_existingWebsite_textFieldActionPerformed
-      
+
     }//GEN-LAST:event_existingWebsite_textFieldActionPerformed
 
     private void existingWebsite_textFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_existingWebsite_textFieldKeyPressed
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-                System.out.println(vaultManager.getAccountFromVault(vaultManager.getVault(saltString), existingWebsite_textField.getText()));
-                AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(saltString), existingWebsite_textField.getText()); 
-                String url = accountValues.getUrl();
-                String username = accountValues.getUsername();
-                String password = accountValues.getPassword();
-                
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+//                    // If vault is empty, the salt doesn't exist. So we will create one
+//        if (vaultFile.length() == 0) {
+//            System.out.println("JSON is empty, creating salt . . .");
+//            globalSalt = new byte[16]; // 16 byte IV for an AES key
+//            SecureRandom rand = new SecureRandom();
+//            rand.nextBytes(globalSalt);
+//            System.out.println("Salt is: " + Base64.getEncoder().encodeToString(globalSalt));
+//
+//        } else { try {
+//            // If vault ISN'T empty, use jackson libraries to read JSON and grab the string where  = "Salt:"
+//            System.out.println("JSON contains values, locating salt . . .");
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
+//            saltString = rootNode.get(0).get("salt").asText();
+//            System.out.println("Salt is : " + saltString);
+//            globalSalt = Base64.getDecoder().decode(saltString);
+//            } // End if
+//            catch (IOException ex) {
+//                Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//
+//        }
+            //System.out.println(saltString);
+            System.out.println(vaultManager.getAccountFromVault(vaultManager.getVault(salt), existingWebsite_textField.getText()));
+            AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(salt), existingWebsite_textField.getText());
+            // Get some paramters
+            String url = accountValues.getUrl();
+            String username = accountValues.getUsername();
+            String password = accountValues.getPassword();
+            String iv = accountValues.getIv();
+            
+            // Grab key related to URL from secure hash-map
+            SecretKey key = SecureKeyStore.getKey(url);
+            String keyString = Base64.getEncoder().encodeToString(key.getEncoded());
+            System.out.println(keyString); // Test print
+            try {
+                // Decrypt with parameters
+                Scrypt_And_Encrypt.decrypt(password, keyString, iv);
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException ex) {
+                Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
     }//GEN-LAST:event_existingWebsite_textFieldKeyPressed
 
 

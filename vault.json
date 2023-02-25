@@ -1,30 +1,12 @@
 [
    {
-      "salt" : "yxC6A8WG/8IRqeYqpoehBg==",
+      "salt" : "WVlPDPew40lOc11eQFLWUw==",
       "accounts" : [
          {
-            "password" : "2tLn2Q+E8bsQzNW+KZlXlJHV1ucwy+ZSneG39w==",
-            "iv" : "o/lv2Z4h7Dcy0fs1vrCSMw==",
-            "url" : "google.com",
-            "username" : "markyboi"
-         },
-         {
-            "password" : "li6f3SqSs0wGF0kuy7/SugK/mpjja9PgLVRP/vo5aB8yvnEVm6pAJMUIVsIh0f7lJ2zeFc7BVfxf1cp8yevFPwA9TiMNN8Qf+sY0njh1L7Q/1w4e36Y=",
-            "iv" : "3yYi0Ifeu15DCS9AZSCWXA==",
-            "url" : "test.com",
-            "username" : "myname"
-         },
-         {
-            "password" : "DlfBZR0A4jnyN2VyYH6ZQ2Cdfg==",
-            "iv" : "eM+AoHUuMd//x9Efo/Woog==",
-            "url" : "testing.comm",
+            "password" : "PIYUb7tGTiqGZlgkjZzBcADVFw==",
+            "iv" : "KsHHxYYmtX+rjDoL7iCVBQ==",
+            "url" : "appl.com",
             "username" : "hi"
-         },
-         {
-            "password" : "jhYPRWPq0zflJ4q7NJqaOMY2khXK1w==",
-            "iv" : "Uc9Mu5JLP5dG+jVSKqDtag==",
-            "url" : "new.comm",
-            "username" : "ok"
          }
       ]
    }

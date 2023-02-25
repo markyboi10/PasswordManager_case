@@ -11,6 +11,8 @@ import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import javax.crypto.AEADBadTagException;
 import javax.crypto.BadPaddingException;
@@ -144,6 +146,8 @@ public class Scrypt_And_Encrypt {
         encryptedValues.add("IV: " + Base64.getEncoder().encodeToString(rawIv));
         encryptedValues.add("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
 
+        SecureKeyStore.putKey(url, key);
+        System.out.println("The og url and key: " + Base64.getEncoder().encodeToString(key.getEncoded()) + " " + url);
         return encryptedValues;
 
     } // End 'main' method
@@ -152,6 +156,7 @@ public class Scrypt_And_Encrypt {
 //		String key; // The Base64 encoded key.
 //		String ciphertext; // The Base64 encoded ciphertext.
 //		String iv; // The initialization vector.
+        
         int tagSize = 128; // 128-bit authentication tag.
 
         // Set up an AES cipher object.
@@ -186,4 +191,5 @@ public class Scrypt_And_Encrypt {
 
     } // End 'decrypt' method
 
+    
 } // End 'Scrypt_And_Encrypt' class

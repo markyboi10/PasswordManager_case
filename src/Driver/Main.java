@@ -63,6 +63,7 @@ public class Main {
             globalSalt = Base64.getDecoder().decode(saltString);
 
         } // End if
+        
 
                 /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -131,5 +132,9 @@ public class Main {
 
         //}
     } // End 'main' method
+
+    public static String getSaltString() {
+        return saltString;
+    }
 
 } // End 'Main' class
