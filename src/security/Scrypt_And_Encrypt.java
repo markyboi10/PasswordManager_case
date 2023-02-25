@@ -40,21 +40,20 @@ public class Scrypt_And_Encrypt {
     private static String username = null;
     private static String url = null;
       private static String password = null;
-    private static String res = null;
 
-    public static ArrayList scrypt_and_encrypt(String newURL, String newUser, String newPassword) throws NoSuchAlgorithmException, InvalidKeySpecException,
+    private static String res = null;
+    
+     public static char[] charPwd = new char[] {'p','a','s','s','w','o','r','d'};
+
+    public static SecretKey scrypt(char[]authentificationPass , byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException,
             NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
             BadPaddingException, IOException {
-        url = newURL;
-        username = newUser;
-        password = newPassword;
+        char[] authPass = authentificationPass;
+        
         /* 
         Objects
          */
-        Scanner in = new Scanner(System.in); // Scanner obj for salt.txt
-        Console cons = System.console(); // Used to get copy of console
-        //String password; // password input intiialization
-        //byte[] salt; // salt(iv) initialization
+
 
         // Default values given by project description
         final int cost = 2048; // Iterations
@@ -66,46 +65,7 @@ public class Scrypt_And_Encrypt {
 
         // Register bouncy castle provider.
         Security.addProvider(new BouncyCastleProvider());
-//
-//        /*
-//        Prompt user for a password
-//         */
-//        if (cons != null) {
-//            System.out.println("Enter a URL: ");
-//            url = cons.readLine();
-//            //cons.readLine(); // consume the newline character
-//            System.out.println("Enter a username: ");
-//            username = cons.readLine();
-//            System.out.println("Do you want to randomly generate a password? (Y/N)");
-//            res = cons.readLine();
-//            if (res.toUpperCase().equals("Y")) {
-//                char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
-//                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
-//                System.out.println(randomStr);
-//                password = randomStr;
-//            } else {
-//                // Password doesn't not echo to console so user must input right next to print statment. (Extra security)
-//                char[] passwordChars = cons.readPassword("Enter a password: ");
-//                password = new String(passwordChars);
-//            }
-//        } else {
-//            System.out.println("Enter a URL: ");
-//            url = in.next();
-//            System.out.println("Enter a username: ");
-//            username = in.next();
-//            System.out.println("Do you want to randomly generate a password? (Y/N)");
-//            res = in.next();
-//            if (res.toUpperCase().equals("Y")) {
-//                char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
-//                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
-//                System.out.println(randomStr);
-//                password = randomStr;
-//            } else {
-//                System.out.print("Enter a password: ");
-//                password = in.next();
-//                System.out.print("");
-//            }
-//        }
+
 
         /*
         Derive the AES key from password using the password
@@ -113,18 +73,34 @@ public class Scrypt_And_Encrypt {
         128 * cost * blockSize * parallelization
         the password arg expects array of chars NOT bytes
          */
-        scryptSpec = new ScryptKeySpec(password.toCharArray(), globalSalt, cost, blockSize, parallelization, keySize);
+        scryptSpec = new ScryptKeySpec(authPass, globalSalt, cost, blockSize, parallelization, keySize);
         // Generate the key
         SecretKey key = SecretKeyFactory.getInstance("SCRYPT").generateSecret(scryptSpec);
-
+    return key;
+    
+    }
+    
+    public static ArrayList encrypt(String newURL, String newUser, String newPassword) throws NoSuchAlgorithmException, InvalidKeySpecException,
+            NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
+            BadPaddingException, IOException {
+        
+            url = newURL;
+       username = newUser;
+       
+       password = newPassword;
+       
+        SecretKey key = scrypt(charPwd,globalSalt);
+       
         // Encrypt using GCM
         Cipher aesCipher = Cipher.getInstance("AES/GCM/NoPadding");
 
+       
+        
         // Generate the IV.
         SecureRandom rand = new SecureRandom();
         byte[] rawIv = new byte[16];		// Block size of AES.
         rand.nextBytes(rawIv);					// Fill the array with random bytes.
-        GCMParameterSpec gcmParams = new GCMParameterSpec(tagSize, rawIv);
+        GCMParameterSpec gcmParams = new GCMParameterSpec(128, rawIv);
 
         // Encrypt mode, passes in aes(salt gen.) key + (tag size, rawIV)
         aesCipher.init(Cipher.ENCRYPT_MODE, key, gcmParams);
@@ -137,7 +113,7 @@ public class Scrypt_And_Encrypt {
         System.out.println("Key: " + Base64.getEncoder().encodeToString(key.getEncoded()));
         System.out.println("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
         System.out.println("IV: " + Base64.getEncoder().encodeToString(rawIv));
-        System.out.println("Tag Size: " + tagSize + " bits.");
+        System.out.println("Tag Size: " + 128 + " bits.");
 
         encryptedValues.add("URL: " + url);
         encryptedValues.add("Username: " + username);
@@ -152,32 +128,20 @@ public class Scrypt_And_Encrypt {
 
     } // End 'main' method
 
-    public static void decrypt(String ct, String key, String IV) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, AEADBadTagException {
+    public static void decrypt(String ct, String IV) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, AEADBadTagException, InvalidKeySpecException, IOException {
 //		String key; // The Base64 encoded key.
 //		String ciphertext; // The Base64 encoded ciphertext.
 //		String iv; // The initialization vector.
         
         int tagSize = 128; // 128-bit authentication tag.
+        SecretKey key= scrypt(charPwd,globalSalt);
+        byte[] keyBytes = key.getEncoded();
 
         // Set up an AES cipher object.
         Cipher aesCipher = Cipher.getInstance("AES/GCM/NoPadding");
 
-//		// Setup the input scanner.
-//		Scanner input = new Scanner(System.in);
-//
-//		// Prompt for the ciphertext.
-//		System.out.print("Please enter ciphertext: ");
-//		ciphertext = input.nextLine();
-//
-//		// Prompt for the key.
-//		System.out.print("Please enter the secret key: ");
-//		key = input.nextLine();
-//
-//		// Prompt for the IV.
-//		System.out.print("Please enter the IV: ");
-//		iv = input.nextLine();
         // Setup the key.
-        SecretKeySpec aesKey = new SecretKeySpec(Base64.getDecoder().decode(key),
+        SecretKeySpec aesKey = new SecretKeySpec(keyBytes,
                 "AES");
 
         // Put the cipher in encrypt mode with the specified key.
@@ -190,6 +154,10 @@ public class Scrypt_And_Encrypt {
         System.out.println("Original password: " + new String(plaintext));
 
     } // End 'decrypt' method
+
+    public static ArrayList getEncryptedValues() {
+        return encryptedValues;
+    }
 
     
 } // End 'Scrypt_And_Encrypt' class

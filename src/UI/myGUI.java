@@ -25,6 +25,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.AEADBadTagException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -273,7 +274,7 @@ public class myGUI extends javax.swing.JFrame {
 
     private void addToManager_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToManager_btnActionPerformed
         try {
-            Scrypt_And_Encrypt.scrypt_and_encrypt(newURL, newUser, newPassword); // Call encryption
+            Scrypt_And_Encrypt.encrypt(newURL, newUser, newPassword); // Call encryption
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | IOException ex) {
             Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -366,8 +367,8 @@ public class myGUI extends javax.swing.JFrame {
             System.out.println(keyString); // Test print
             try {
                 // Decrypt with parameters
-                Scrypt_And_Encrypt.decrypt(password, keyString, iv);
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException ex) {
+                Scrypt_And_Encrypt.decrypt(password, iv);
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeySpecException | IOException ex) {
                 Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
