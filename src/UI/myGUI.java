@@ -1,12 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package UI;
 
-//import static Driver.Main.saltString;
-import Driver.Main;
-import static Driver.Main.saltString;
 import static Driver.Main.vaultManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,15 +18,12 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.AEADBadTagException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.swing.JOptionPane;
 import org.apache.commons.lang3.RandomStringUtils;
-import security.Scrypt_And_Encrypt;
-import static security.Scrypt_And_Encrypt.globalSalt;
-import security.SecureKeyStore;
+import security.Scrypt_Encrypt_Decrypt;
 
 /**
  *
@@ -41,18 +31,35 @@ import security.SecureKeyStore;
  */
 public class myGUI extends javax.swing.JFrame {
 
+    /*
+    Objects
+    */
     private static String newURL = null;
     private static String newUser = null;
     private static String newPassword = null;
-    private static String salt;
+    private static String genPassword = null;
+    public static byte[] globalSalt = null;
+    public static String saltString = null;
     List<AccountValue> users = new ArrayList<>();
     File vaultFile = new File(VaultManager.getFILE_NAME());
+
     /**
      * Creates new form myGUI
      */
     public myGUI() {
-        initComponents();
-    }
+        initComponents(); // Sets gui components
+        try {
+            // If file contains data, read it and set salt
+            if (vaultFile.length() != 0) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
+                saltString = rootNode.get(0).get("salt").asText();
+                globalSalt = Base64.getDecoder().decode(saltString);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } // End contructor 'myGUI'
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -259,51 +266,63 @@ public class myGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    @Deprecated
     private void newWebsite_textFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newWebsite_textFieldActionPerformed
-        //newURL = newWebsite_textField.getText();
+
     }//GEN-LAST:event_newWebsite_textFieldActionPerformed
 
+    @Deprecated
     private void newUser_textFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUser_textFieldActionPerformed
-        //newUser = newUser_textField.getText();
+
     }//GEN-LAST:event_newUser_textFieldActionPerformed
 
+    @Deprecated
     private void newPassword_textFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPassword_textFieldActionPerformed
-//        newPassword = newPassword_textField.getText();
-//        System.out.println(newPassword);
+
     }//GEN-LAST:event_newPassword_textFieldActionPerformed
 
+    /*
+    Adds a new account to the vault,
+    will not allow duplicate urls for 
+    simplicity.
+    */
     private void addToManager_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToManager_btnActionPerformed
-        try {
-            Scrypt_And_Encrypt.encrypt(newURL, newUser, newPassword); // Call encryption
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | IOException ex) {
-            Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ArrayList encryptedValues = Scrypt_And_Encrypt.getEncryptedValues(); // Grab return array from scrypt_and_encrypt
 
-            /*
-            Parse the returned array
-            */
-            String joinedString = String.join(",", encryptedValues);
-            // Remove the brackets and split the string by comma
-            String[] values = joinedString.substring(1, joinedString.length()).split(",");
-            // Extract the values by splitting each string by colon and stripping the white spaces
-            String url = values[0].split(":")[1].trim();
-            String username = values[1].split(":")[1].trim();
-            String cipherText = values[2].split(":")[1].trim();
-            String key = values[3].split(":")[1].trim(); // Not used rn
-            String iv = values[4].split(":")[1].trim();
-            salt = values[5].split(":")[1].trim();
-            System.out.println("");
-            System.out.println("```");
-            System.out.println("The return array: " + encryptedValues);
-            System.out.println("```");
-            System.out.println("");
-            /*
-             Pass parameters from returned array, this updates the vault with new account info
-             */
-            vaultManager.addAccountToVault(salt, username, cipherText, iv, url); 
+        boolean urlExists = false;
+        if (vaultFile.length() != 0) {
+            List<AccountValue> accounts = vaultManager.getAccountsFromVault(saltString); // Call getAccountsFromVault 
+            // Loop through the list
+            for (AccountValue account : accounts) {
+                // If URL already exists, set boolean true and break
+                if (account.getUrl().equals(newURL)) {
+                    urlExists = true;
+                    break;
+                } // End inner-if
+            } // End for
+        } // End outer-if
+        
+        // If url exists, error message sends
+        if (urlExists) {
+            JOptionPane.showMessageDialog(rootPane, "URL already contains an account!", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else { // Else, add account to vault
+            try {
+                // Encrypt generated password
+                if (newPassword_textField.getText().equals("")) {
+                    Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, genPassword);
+                } else { // Encrypt user's password
+                    Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, newPassword);
+                }
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | IOException ex) {
+                Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+            } // End try-catch
+            
+        } // End if-else
+        
     }//GEN-LAST:event_addToManager_btnActionPerformed
-
+    
+    /*
+    The followiing three methods grab text from input fields (url, username, password)
+    */
     private void newPassword_textFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newPassword_textFieldFocusLost
         newPassword = newPassword_textField.getText();
     }//GEN-LAST:event_newPassword_textFieldFocusLost
@@ -313,69 +332,65 @@ public class myGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_newUser_textFieldFocusLost
 
     private void newWebsite_textFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newWebsite_textFieldFocusLost
-       newURL = newWebsite_textField.getText();
+        newURL = newWebsite_textField.getText();
     }//GEN-LAST:event_newWebsite_textFieldFocusLost
 
+    /*
+    If generated password button is hit,
+    use secure random instance to create a password
+    from the possible characters. Uses char array s.t.
+    to avoid garbage collection type attacks
+    */
     private void generatePassword_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePassword_btnActionPerformed
         newPassword_textField.setText("");
         char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
-                String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
-                System.out.println(randomStr);
-                newPassword = randomStr;
+        String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
+        System.out.println(randomStr);
+        genPassword = randomStr;
     }//GEN-LAST:event_generatePassword_btnActionPerformed
 
+    @Deprecated
     private void existingWebsite_textFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_existingWebsite_textFieldActionPerformed
 
     }//GEN-LAST:event_existingWebsite_textFieldActionPerformed
 
+    /*
+    Used to search for account details, given
+    the url.
+    */
     private void existingWebsite_textFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_existingWebsite_textFieldKeyPressed
+        // If enter is pressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//                    // If vault is empty, the salt doesn't exist. So we will create one
-//        if (vaultFile.length() == 0) {
-//            System.out.println("JSON is empty, creating salt . . .");
-//            globalSalt = new byte[16]; // 16 byte IV for an AES key
-//            SecureRandom rand = new SecureRandom();
-//            rand.nextBytes(globalSalt);
-//            System.out.println("Salt is: " + Base64.getEncoder().encodeToString(globalSalt));
-//
-//        } else { try {
-//            // If vault ISN'T empty, use jackson libraries to read JSON and grab the string where  = "Salt:"
-//            System.out.println("JSON contains values, locating salt . . .");
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
-//            saltString = rootNode.get(0).get("salt").asText();
-//            System.out.println("Salt is : " + saltString);
-//            globalSalt = Base64.getDecoder().decode(saltString);
-//            } // End if
-//            catch (IOException ex) {
-//                Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//
-//        }
-            //System.out.println(saltString);
-            System.out.println(vaultManager.getAccountFromVault(vaultManager.getVault(salt), existingWebsite_textField.getText()));
-            AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(salt), existingWebsite_textField.getText());
-            // Get some paramters
-            String url = accountValues.getUrl();
-            String username = accountValues.getUsername();
-            String password = accountValues.getPassword();
-            String iv = accountValues.getIv();
-            
-            // Grab key related to URL from secure hash-map
-            SecretKey key = SecureKeyStore.getKey(url);
-            String keyString = Base64.getEncoder().encodeToString(key.getEncoded());
-            System.out.println(keyString); // Test print
             try {
-                // Decrypt with parameters
-                Scrypt_And_Encrypt.decrypt(password, iv);
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeySpecException | IOException ex) {
+                /*
+                Grab salt from file
+                */
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
+                saltString = rootNode.get(0).get("salt").asText();
+                globalSalt = Base64.getDecoder().decode(saltString);
+                
+                // Grab account values given salt and url
+                AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(saltString), existingWebsite_textField.getText());
+
+                // Parameters to be passed in
+                String password = accountValues.getPassword();
+                String iv = accountValues.getIv();
+
+                try {
+                    // Decrypt with parameters
+                    Scrypt_Encrypt_Decrypt.decrypt(password, iv);
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeySpecException | IOException ex) {
+                    Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } // End inner try-catch
+            } catch (IOException ex) {
                 Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+            } // End outer try-catch
+            
+        } // End if
+        
     }//GEN-LAST:event_existingWebsite_textFieldKeyPressed
 
-
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField accountInfo_formattedField;
@@ -394,4 +409,4 @@ public class myGUI extends javax.swing.JFrame {
     private javax.swing.JLabel username_label;
     private javax.swing.JLabel website_label;
     // End of variables declaration//GEN-END:variables
-}
+} // End class 'myGUI'

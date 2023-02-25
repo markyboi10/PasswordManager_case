@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import security.Scrypt_And_Encrypt;
-import static security.Scrypt_And_Encrypt.globalSalt;
+import security.Scrypt_Encrypt_Decrypt;
+import static security.Scrypt_Encrypt_Decrypt.globalSalt;
 
 /**
  *
@@ -97,9 +97,9 @@ public class Main {
         Encryption and decryptin console calls
         */
 //        try {
-////            Scrypt_And_Encrypt.scrypt_and_encrypt(); // Call encryption
+////            Scrypt_Encrypt_Decrypt.scrypt_and_encrypt(); // Call encryption
 //
-////            ArrayList encryptedValues = Scrypt_And_Encrypt.getEncryptedValues(); // Grab return array from scrypt_and_encrypt
+////            ArrayList encryptedValues = Scrypt_Encrypt_Decrypt.getEncryptedValues(); // Grab return array from scrypt_and_encrypt
 ////
 ////            /*
 ////            Parse the returned array
@@ -124,7 +124,7 @@ public class Main {
 ////             */
 ////            vaultManager.addAccountToVault(salt, username, cipherText, iv, url); 
 //              vaultManager.getAccountFromVault(vaultManager.getVault(saltString), saltString);
-//            Scrypt_And_Encrypt.decrypt(cipherText, key, iv); // Test decryption call, currently works through console and user input
+//            Scrypt_Encrypt_Decrypt.decrypt(cipherText, key, iv); // Test decryption call, currently works through console and user input
 //
 //        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException ex) {
 //            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

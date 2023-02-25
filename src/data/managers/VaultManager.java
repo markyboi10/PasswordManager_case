@@ -13,6 +13,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 public class VaultManager implements Manager {
@@ -108,6 +110,26 @@ public class VaultManager implements Manager {
         return null; // If no vault is found return null
     }
 
+        /**
+     * Get all accounts from a vault with salt name
+     * {@code collection_name}
+     *
+     * @param salt_name
+     * @return
+     */
+    public  List<AccountValue> getAccountsFromVault(String salt_name) {
+        
+        VaultValue collectionValue = getVault(salt_name);
+
+        if (collectionValue == null) {
+            System.out.println("Collection with the name " + salt_name + " not found. May be due to a new collection added. Try a new launch.");
+            return null;
+        }
+
+        // Return a collection of mapped PhotoValues.
+        return collectionValue.getSalt().stream().filter(n -> n instanceof AccountValue).map(n -> (AccountValue) n).collect(Collectors.toList());
+    }
+    
     @Override
     public String getJSON() {
         return vault.getFormattedJSON();
