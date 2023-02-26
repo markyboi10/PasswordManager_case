@@ -90,21 +90,11 @@ public class Scrypt_Encrypt_Decrypt {
 
         // Encrypt mode, passes in aes(salt gen.) key + (tag size, rawIV)
         aesCipher.init(Cipher.ENCRYPT_MODE, key, gcmParams);
-        System.out.println(newPassword);
         char[] msg = newPassword;
         // msg = new String(newPassword);
         
         byte[] passwordBytes = new String(msg).getBytes(StandardCharsets.US_ASCII);
 byte[] ciphertext = aesCipher.doFinal(passwordBytes);
-       // byte[] ciphertext = aesCipher.doFinal(msg.getBytes(StandardCharsets.US_ASCII));
-
-        // Output the result
-        System.out.println("");
-        System.out.println("Ciphertext: " + Base64.getEncoder().encodeToString(ciphertext));
-        System.out.println("Key: " + Base64.getEncoder().encodeToString(key.getEncoded()));
-        System.out.println("Salt: " + Base64.getEncoder().encodeToString(globalSalt));
-        System.out.println("IV: " + Base64.getEncoder().encodeToString(rawIv));
-        System.out.println("Tag Size: " + 128 + " bits.");
        
         vaultManager.addAccountToVault(Base64.getEncoder().encodeToString(globalSalt), newUser, Base64.getEncoder().encodeToString(ciphertext), Base64.getEncoder().encodeToString(rawIv), newURL); 
         
@@ -129,8 +119,6 @@ byte[] ciphertext = aesCipher.doFinal(passwordBytes);
 
         // Finalize the message.
         byte[] plaintext = aesCipher.doFinal(Base64.getDecoder().decode(ct));
-
-        System.out.println("Original password: " + new String(plaintext));
 
         return plaintext;
         

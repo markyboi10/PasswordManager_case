@@ -1,10 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package UI;
-
-import security.Scrypt_Encrypt_Decrypt;
 
 /**
  *
@@ -51,7 +45,14 @@ public class DialogBox extends javax.swing.JFrame {
         credentials_root_pane.setkStartColor(new java.awt.Color(69, 104, 220));
 
         credentials_label.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        credentials_label.setForeground(new java.awt.Color(204, 204, 204));
         credentials_label.setText("Credentials");
+
+        website_textfield.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                website_textfieldActionPerformed(evt);
+            }
+        });
 
         website_lbl.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         website_lbl.setForeground(new java.awt.Color(204, 204, 204));
@@ -144,6 +145,10 @@ public class DialogBox extends javax.swing.JFrame {
         website_textfield.setText("");
         username_textfield.setText("");
     }//GEN-LAST:event_formWindowClosing
+
+    private void website_textfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_website_textfieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_website_textfieldActionPerformed
 
 
 

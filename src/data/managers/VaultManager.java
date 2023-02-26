@@ -90,7 +90,6 @@ public class VaultManager implements Manager {
                 }
             }
         }
-        System.out.println("URL not found in JSON");
         return null; // If no url is found, return null
     }
 
