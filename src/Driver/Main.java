@@ -90,8 +90,18 @@ public class Main {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new myGUI().setVisible(true);
+             myGUI myGUI = new myGUI();
+             
+            myGUI.setFocusableWindowState(false);
+            myGUI.setVisible(true);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+myGUI.setFocusableWindowState(true);
         });
+
 
         /*
         Encryption and decryptin console calls
