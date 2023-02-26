@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,8 +37,8 @@ public class myGUI extends javax.swing.JFrame {
     */
     private static String newURL = null;
     private static String newUser = null;
-    private static String newPassword = null;
-    private static String genPassword = null;
+    private static char[] newPassword = null;
+    private static char[] genPassword = null;
     public static byte[] globalSalt = null;
     public static String saltString = null;
     List<AccountValue> users = new ArrayList<>();
@@ -85,6 +86,7 @@ public class myGUI extends javax.swing.JFrame {
         findExistingAccountDetails_label = new javax.swing.JLabel();
         existingWebsite_label = new javax.swing.JLabel();
         accountInfo_formattedField = new javax.swing.JFormattedTextField();
+        passwordField_hiddenField = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -173,6 +175,12 @@ public class myGUI extends javax.swing.JFrame {
         existingWebsite_label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         existingWebsite_label.setText("Website:");
 
+        passwordField_hiddenField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                passwordField_hiddenFieldFocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout root_paneLayout = new javax.swing.GroupLayout(root_pane);
         root_pane.setLayout(root_paneLayout);
         root_paneLayout.setHorizontalGroup(
@@ -182,25 +190,31 @@ public class myGUI extends javax.swing.JFrame {
                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(root_paneLayout.createSequentialGroup()
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(newAccount_label, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(root_paneLayout.createSequentialGroup()
-                                .addComponent(password_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(addToManager_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                                    .addComponent(newPassword_textField))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(generatePassword_btn))
-                            .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, root_paneLayout.createSequentialGroup()
-                                    .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(newWebsite_textField))
-                                .addGroup(root_paneLayout.createSequentialGroup()
-                                    .addComponent(username_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(newUser_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(newAccount_label, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, root_paneLayout.createSequentialGroup()
+                                            .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(newWebsite_textField))
+                                        .addGroup(root_paneLayout.createSequentialGroup()
+                                            .addComponent(username_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(newUser_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(root_paneLayout.createSequentialGroup()
+                                        .addComponent(password_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(addToManager_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(passwordField_hiddenField, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(generatePassword_btn)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, root_paneLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(newPassword_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(19, 19, 19)))
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, root_paneLayout.createSequentialGroup()
                                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -232,23 +246,25 @@ public class myGUI extends javax.swing.JFrame {
                     .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(newWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(existingWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(existingWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(root_paneLayout.createSequentialGroup()
+                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(root_paneLayout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(username_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(newUser_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(newPassword_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(56, 56, 56)
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(username_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(newUser_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(56, 56, 56)
-                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(newPassword_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(password_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(generatePassword_btn))
+                            .addComponent(generatePassword_btn)
+                            .addComponent(passwordField_hiddenField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(43, 43, 43)
                         .addComponent(addToManager_btn))
-                    .addGroup(root_paneLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(accountInfo_formattedField, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(accountInfo_formattedField, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
 
@@ -307,7 +323,8 @@ public class myGUI extends javax.swing.JFrame {
         } else { // Else, add account to vault
             try {
                 // Encrypt generated password
-                if (newPassword_textField.getText().equals("")) {
+                if (passwordField_hiddenField.getPassword().length == 0) {
+                    System.out.println("gen" + Arrays.toString(genPassword));
                     Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, genPassword);
                 } else { // Encrypt user's password
                     Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, newPassword);
@@ -324,7 +341,7 @@ public class myGUI extends javax.swing.JFrame {
     The followiing three methods grab text from input fields (url, username, password)
     */
     private void newPassword_textFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newPassword_textFieldFocusLost
-        newPassword = newPassword_textField.getText();
+   
     }//GEN-LAST:event_newPassword_textFieldFocusLost
 
     private void newUser_textFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newUser_textFieldFocusLost
@@ -342,11 +359,11 @@ public class myGUI extends javax.swing.JFrame {
     to avoid garbage collection type attacks
     */
     private void generatePassword_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePassword_btnActionPerformed
-        newPassword_textField.setText("");
+        passwordField_hiddenField.setText("");
         char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
         String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
         System.out.println(randomStr);
-        genPassword = randomStr;
+        genPassword = randomStr.toCharArray();
     }//GEN-LAST:event_generatePassword_btnActionPerformed
 
     @Deprecated
@@ -391,6 +408,12 @@ public class myGUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_existingWebsite_textFieldKeyPressed
 
+    private void passwordField_hiddenFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordField_hiddenFieldFocusLost
+        if(passwordField_hiddenField.getPassword().length != 0) {    
+            newPassword = passwordField_hiddenField.getPassword();
+        }
+    }//GEN-LAST:event_passwordField_hiddenFieldFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField accountInfo_formattedField;
@@ -403,6 +426,7 @@ public class myGUI extends javax.swing.JFrame {
     private static javax.swing.JTextField newPassword_textField;
     private static javax.swing.JTextField newUser_textField;
     private static javax.swing.JTextField newWebsite_textField;
+    private javax.swing.JPasswordField passwordField_hiddenField;
     private javax.swing.JLabel passwordManager_label;
     private javax.swing.JLabel password_label;
     private keeptoo.KGradientPanel root_pane;

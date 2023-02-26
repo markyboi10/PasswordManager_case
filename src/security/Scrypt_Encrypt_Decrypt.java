@@ -70,7 +70,7 @@ public class Scrypt_Encrypt_Decrypt {
     
     } // Enm 'scrypt' method
     
-    public static ArrayList encrypt(String newURL, String newUser, String newPassword) throws NoSuchAlgorithmException, InvalidKeySpecException,
+    public static ArrayList encrypt(String newURL, String newUser, char[] newPassword) throws NoSuchAlgorithmException, InvalidKeySpecException,
             NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
             BadPaddingException, IOException {
         
@@ -90,10 +90,13 @@ public class Scrypt_Encrypt_Decrypt {
 
         // Encrypt mode, passes in aes(salt gen.) key + (tag size, rawIV)
         aesCipher.init(Cipher.ENCRYPT_MODE, key, gcmParams);
-        String msg = newPassword;
+        System.out.println(newPassword);
+        char[] msg = newPassword;
+        // msg = new String(newPassword);
         
-        
-        byte[] ciphertext = aesCipher.doFinal(msg.getBytes(StandardCharsets.US_ASCII));
+        byte[] passwordBytes = new String(msg).getBytes(StandardCharsets.US_ASCII);
+byte[] ciphertext = aesCipher.doFinal(passwordBytes);
+       // byte[] ciphertext = aesCipher.doFinal(msg.getBytes(StandardCharsets.US_ASCII));
 
         // Output the result
         System.out.println("");

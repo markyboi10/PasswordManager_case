@@ -52,31 +52,40 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="newAccount_label" alignment="0" min="-2" pref="157" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="password_label" min="-2" pref="61" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="addToManager_btn" pref="136" max="32767" attributes="0"/>
-                                      <Component id="newPassword_textField" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="newAccount_label" alignment="0" min="-2" pref="157" max="-2" attributes="0"/>
+                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="website_label" min="-2" pref="61" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="newWebsite_textField" max="32767" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" attributes="0">
+                                              <Component id="username_label" min="-2" pref="61" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="newUser_textField" min="-2" pref="136" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="password_label" min="-2" pref="61" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="addToManager_btn" min="-2" pref="136" max="-2" attributes="0"/>
+                                              <Component id="passwordField_hiddenField" pref="142" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="generatePassword_btn" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="generatePassword_btn" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace pref="60" max="32767" attributes="0"/>
                               </Group>
-                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="website_label" min="-2" pref="61" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="newWebsite_textField" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="username_label" min="-2" pref="61" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="newUser_textField" min="-2" pref="136" max="-2" attributes="0"/>
-                                  </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="newPassword_textField" min="-2" pref="136" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="60" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
@@ -119,29 +128,32 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="website_label" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                           <Component id="newWebsite_textField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="existingWebsite_textField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="existingWebsite_textField" alignment="1" min="-2" pref="22" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="username_label" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
-                              <Component id="newUser_textField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="username_label" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                                      <Component id="newUser_textField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="newPassword_textField" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="newPassword_textField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="password_label" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                               <Component id="generatePassword_btn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="passwordField_hiddenField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                           <Component id="addToManager_btn" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="accountInfo_formattedField" min="-2" pref="203" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="accountInfo_formattedField" min="-2" pref="203" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
@@ -261,6 +273,11 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="accountInfo_formattedField">
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="passwordField_hiddenField">
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="passwordField_hiddenFieldFocusLost"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
