@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import data.managers.VaultManager;
 import data.objects.AccountValue;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +23,9 @@ import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import org.apache.commons.lang3.RandomStringUtils;
 import security.Scrypt_Encrypt_Decrypt;
 
@@ -47,6 +50,7 @@ public class myGUI extends javax.swing.JFrame {
     DialogBox db = new DialogBox();
         public static String finalURL = null;
     public static String finalUser = null;
+     DefaultListModel defaultListModel = new DefaultListModel();
 
     /**
      * Creates new form myGUI
@@ -92,8 +96,9 @@ public class myGUI extends javax.swing.JFrame {
         existingWebsite_textField = new javax.swing.JTextField();
         findExistingAccountDetails_label = new javax.swing.JLabel();
         existingWebsite_label = new javax.swing.JLabel();
-        accountInfo_formattedField = new javax.swing.JFormattedTextField();
         passwordField_hiddenField = new javax.swing.JPasswordField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -221,6 +226,8 @@ public class myGUI extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.setViewportView(jList1);
+
         javax.swing.GroupLayout root_paneLayout = new javax.swing.GroupLayout(root_pane);
         root_pane.setLayout(root_paneLayout);
         root_paneLayout.setHorizontalGroup(
@@ -257,16 +264,16 @@ public class myGUI extends javax.swing.JFrame {
                                 .addGap(19, 19, 19)))
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, root_paneLayout.createSequentialGroup()
-                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(root_paneLayout.createSequentialGroup()
-                                        .addComponent(existingWebsite_label, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(existingWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(accountInfo_formattedField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(existingWebsite_label, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(existingWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(62, 62, 62))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, root_paneLayout.createSequentialGroup()
                                 .addComponent(findExistingAccountDetails_label)
-                                .addGap(43, 43, 43))))
+                                .addGap(43, 43, 43))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, root_paneLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(162, 162, 162))))
                     .addGroup(root_paneLayout.createSequentialGroup()
                         .addGap(215, 215, 215)
                         .addComponent(passwordManager_label)
@@ -288,9 +295,9 @@ public class myGUI extends javax.swing.JFrame {
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(newWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(root_paneLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(root_paneLayout.createSequentialGroup()
                                 .addGap(38, 38, 38)
@@ -305,7 +312,9 @@ public class myGUI extends javax.swing.JFrame {
                             .addComponent(passwordField_hiddenField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(43, 43, 43)
                         .addComponent(addToManager_btn))
-                    .addComponent(accountInfo_formattedField, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(root_paneLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(30, 30, 30))
         );
 
@@ -345,6 +354,21 @@ public class myGUI extends javax.swing.JFrame {
     */
     private void addToManager_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToManager_btnActionPerformed
 
+  if (newUser_textField.getText().equals("")|| newWebsite_textField.getText().equals("") || passwordField_hiddenField.getPassword().equals("")) {
+             // do not initiate action performed, break out of it
+            JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (newPassword != null && newPassword.length >= 1 && newPassword.length <= 7) {   
+            int res = JOptionPane.showConfirmDialog(rootPane, "Weak password. It is highly recommended have AT LEAST 8 characters!", "WARNING", JOptionPane.OK_CANCEL_OPTION);
+            if(res == JOptionPane.OK_OPTION) {
+                //continue
+            } else {
+                return;
+            }
+        } else {
+            // continue
+        }
+
         boolean urlExists = false;
         if (vaultFile.length() != 0) {
             List<AccountValue> accounts = vaultManager.getAccountsFromVault(saltString); // Call getAccountsFromVault 
@@ -376,6 +400,7 @@ public class myGUI extends javax.swing.JFrame {
             
         } // End if-else
         
+        
     }//GEN-LAST:event_addToManager_btnActionPerformed
     
     /*
@@ -400,11 +425,24 @@ public class myGUI extends javax.swing.JFrame {
     to avoid garbage collection type attacks
     */
     private void generatePassword_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePassword_btnActionPerformed
+                      if (newUser_textField.getText().equals("")|| newWebsite_textField.getText().equals("") || passwordField_hiddenField.getPassword().equals("")){
+             JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
+                   return; 
+        } else {
         passwordField_hiddenField.setText("");
         char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
         String randomStr = RandomStringUtils.random(70, 0, possibleCharacters.length - 1, false, false, possibleCharacters, new SecureRandom());
         System.out.println(randomStr);
         genPassword = randomStr.toCharArray();
+        
+ 
+            int res = JOptionPane.showConfirmDialog(rootPane, "Password generated, hit ok to add to manager OR cancel to edit", "INFO", JOptionPane.OK_CANCEL_OPTION);
+                    if(res == JOptionPane.OK_OPTION) {
+                ActionEvent actionEvent = new ActionEvent(evt.getSource(), evt.getID(), "ok");
+        addToManager_btnActionPerformed(actionEvent);
+            } else {
+            }
+        }
     }//GEN-LAST:event_generatePassword_btnActionPerformed
 
     @Deprecated
@@ -419,6 +457,7 @@ public class myGUI extends javax.swing.JFrame {
     private void existingWebsite_textFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_existingWebsite_textFieldKeyPressed
         // If enter is pressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+     
             try {
                 /*
                 Grab salt from file
@@ -428,15 +467,21 @@ public class myGUI extends javax.swing.JFrame {
                 saltString = rootNode.get(0).get("salt").asText();
                 globalSalt = Base64.getDecoder().decode(saltString);
                 
+
                 // Grab account values given salt and url
                 AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(saltString), existingWebsite_textField.getText());
-
+                System.out.println(accountValues);
+                System.out.println(saltString);
+                System.out.println(existingWebsite_textField.getText());
                 // Parameters to be passed in
                 finalURL = accountValues.getUrl();
                 finalUser = accountValues.getUsername();
                 String password = accountValues.getPassword();
                 String iv = accountValues.getIv();
 
+                                       getURL();
+               searchFilter(existingWebsite_textField.getText());
+                
                 try {
                     // Decrypt with parameters
                     Scrypt_Encrypt_Decrypt.decrypt(password, iv);
@@ -478,8 +523,7 @@ public class myGUI extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(rootPane, "Exit the current 'Dialog Box' before loading a new one", "WARNING", JOptionPane.WARNING_MESSAGE);
         }
-        
-        } // End if
+        }
         
     }//GEN-LAST:event_existingWebsite_textFieldKeyPressed
 
@@ -503,9 +547,42 @@ public class myGUI extends javax.swing.JFrame {
         return finalUser;
     }
 
+ private ArrayList getURL() {
+        ArrayList urls = new ArrayList();
+        
+        List<AccountValue> accounts = vaultManager.getAccountsFromVault(saltString); // Call getAccountsFromVault 
+        System.out.println("Accounts:" + saltString);
+        // Loop through the list
+        for (AccountValue account : accounts) {
+            urls.add(account.getUrl());
+        } // End for
+        
+        return urls;
+    }
 
+    private void bindData () {
+        getURL().stream().forEach((urls) -> {
+            defaultListModel.addElement(urls);
+        });
+        jList1.setModel(defaultListModel);
+        jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
+    
+    public void searchFilter(String searchTerm) {
+       DefaultListModel def = new DefaultListModel();
+        ArrayList urls = getURL();
+        
+        urls.stream().forEach((url)-> {
+          String urlName = url.toString();
+          if(urlName.contains(searchTerm)) {
+              def.addElement(url);
+          }
+        });
+        defaultListModel=def;
+        jList1.setModel(defaultListModel);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JFormattedTextField accountInfo_formattedField;
     private javax.swing.JButton addToManager_btn;
     private javax.swing.JLabel existingWebsite_label;
     private javax.swing.JTextField existingWebsite_textField;
@@ -514,6 +591,8 @@ public class myGUI extends javax.swing.JFrame {
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
     private javax.swing.JDialog jDialog3;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel newAccount_label;
     private static javax.swing.JTextField newPassword_textField;
     private static javax.swing.JTextField newUser_textField;
