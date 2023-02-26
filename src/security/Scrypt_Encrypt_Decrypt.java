@@ -124,6 +124,10 @@ byte[] ciphertext = aesCipher.doFinal(passwordBytes);
         
     } // End 'decrypt' method
 
+    public static char[] getCharPwd() {
+        return charPwd;
+    }
+
 
 
     

@@ -54,7 +54,9 @@ public class myGUI_1 extends javax.swing.JFrame {
     DialogBox db = new DialogBox();
     public static String finalURL = null;
     public static String finalUser = null;
+    public static String enteredAuthPass = null;
     DefaultListModel defaultListModel = new DefaultListModel();
+
 
     /**
      * Creates new form myGUI
@@ -359,19 +361,31 @@ public class myGUI_1 extends javax.swing.JFrame {
      */
     private void addToManager_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addToManager_btnActionPerformed
 
-        if (newUser_textField.getText().equals("") || newWebsite_textField.getText().equals("") || passwordField_hiddenField.getPassword().equals("")) {
-            // do not initiate action performed, break out of it
+        if (newUser_textField.getText().equals("") || newWebsite_textField.getText().equals("") || passwordField_hiddenField.getPassword().length == 0 && genPassword == null) {
             JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (passwordField_hiddenField.getPassword().length > 0 && newPassword != null && newPassword.length >= 1 && newPassword.length <= 7) {
+        } else if (passwordField_hiddenField.getPassword().length > 0 && newPassword != null && newPassword.length >= 1 && newPassword.length < 7) {
             int res = JOptionPane.showConfirmDialog(rootPane, "Weak password. It is highly recommended have AT LEAST 8 characters!", "WARNING", JOptionPane.OK_CANCEL_OPTION);
             if (res == JOptionPane.OK_OPTION) {
                 //continue
+
             } else {
                 return;
             }
+
+        }
+
+        // Call authentification
+        String res2 = JOptionPane.showInputDialog(rootPane, "Enter Authentification Password", "", JOptionPane.OK_OPTION);
+
+        if (res2 == null) {
+            JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (Arrays.equals(res2.toCharArray(), Scrypt_Encrypt_Decrypt.getCharPwd())) {
+            //continue
         } else {
-            // continue
+            JOptionPane.showMessageDialog(rootPane, "INCORRECT AUTHENTIFICATION", "EEROR", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
         boolean urlExists = false;
@@ -404,9 +418,11 @@ public class myGUI_1 extends javax.swing.JFrame {
                 // Encrypt generated password
                 if (passwordField_hiddenField.getPassword().length == 0 && genPassword != null) {
                     Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, genPassword);
+                    JOptionPane.showMessageDialog(rootPane, "Account successfully added", "Info", JOptionPane.INFORMATION_MESSAGE);
                     genPassword = null;
                 } else if (passwordField_hiddenField.getPassword().length != 0 && newPassword != null) { // Encrypt user's password
                     Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, newPassword);
+                    JOptionPane.showMessageDialog(rootPane, "Account successfully added", "Info", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
                 }
@@ -415,12 +431,12 @@ public class myGUI_1 extends javax.swing.JFrame {
             } // End try-catch
 
         } // End if-else
-
+        
     }//GEN-LAST:event_addToManager_btnActionPerformed
 
     /*
     Grab text when focus is lost
-    */
+     */
     private void newUser_textFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newUser_textFieldFocusLost
         newUser = newUser_textField.getText();
     }//GEN-LAST:event_newUser_textFieldFocusLost
@@ -429,7 +445,7 @@ public class myGUI_1 extends javax.swing.JFrame {
     Grab url and check if it
     is valid with urlValidator obj. If it is valid
     continue, else send msg and error out box
-    */
+     */
     private void newWebsite_textFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newWebsite_textFieldFocusLost
         newURL = newWebsite_textField.getText();
 
@@ -442,9 +458,9 @@ public class myGUI_1 extends javax.swing.JFrame {
                 newWebsite_textField.setBorder(new LineBorder(Color.RED));
                 JOptionPane.showMessageDialog(rootPane, "Invalid URL", "EEROR", JOptionPane.ERROR_MESSAGE);
             } // End inner-if
-            
+
         } // End outer-if
-        
+
     }//GEN-LAST:event_newWebsite_textFieldFocusLost
 
     /*
@@ -465,17 +481,18 @@ public class myGUI_1 extends javax.swing.JFrame {
 
             /*
             Lets user now password gen was successfull and how to continue
-            */
+             */
             int res = JOptionPane.showConfirmDialog(rootPane, "Password generated, hit 'OK' to add to manager OR 'Cancel' to edit account information", "INFO", JOptionPane.OK_CANCEL_OPTION);
             if (res == JOptionPane.OK_OPTION) {
                 ActionEvent actionEvent = new ActionEvent(evt.getSource(), evt.getID(), "");
                 addToManager_btnActionPerformed(actionEvent);
             } else {
+                // nothing
                 
             } // End if
-            
+
         } // End if
-        
+
     }//GEN-LAST:event_generatePassword_btnActionPerformed
 
     @Deprecated
@@ -490,13 +507,28 @@ public class myGUI_1 extends javax.swing.JFrame {
     private void existingWebsite_textFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_existingWebsite_textFieldKeyPressed
         try {
             // If enter is pressed
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
-            saltString = rootNode.get(0).get("salt").asText();
-            globalSalt = Base64.getDecoder().decode(saltString);
-            searchFilter(existingWebsite_textField.getText());
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                searchAndDecrypt();
+            if (vaultFile.length() != 0) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
+                saltString = rootNode.get(0).get("salt").asText();
+                globalSalt = Base64.getDecoder().decode(saltString);
+                searchFilter(existingWebsite_textField.getText());
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String res2 = JOptionPane.showInputDialog(rootPane, "Enter Authentification Password","", JOptionPane.OK_OPTION);
+
+                    if (res2 == null) {
+                        JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    } else if (Arrays.equals(res2.toCharArray(), Scrypt_Encrypt_Decrypt.getCharPwd())) {
+                        //continue
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "INCORRECT AUTHENTIFICATION", "EEROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    searchAndDecrypt();
+                }
+            } else {
+                //do nothing
             }
         } catch (IOException ex) {
             Logger.getLogger(myGUI_1.class.getName()).log(Level.SEVERE, null, ex);
@@ -506,7 +538,7 @@ public class myGUI_1 extends javax.swing.JFrame {
 
     /*
     Grab password info
-    */
+     */
     private void passwordField_hiddenFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordField_hiddenFieldFocusLost
         if (passwordField_hiddenField.getPassword().length != 0) {
             newPassword = passwordField_hiddenField.getPassword();
@@ -522,7 +554,7 @@ public class myGUI_1 extends javax.swing.JFrame {
     If enter item in jList is clicked,
     2 = call searchAndDecrypt indirectly
     1 = set text to item
-    */
+     */
     private void searchListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchListMouseClicked
         if (evt.getClickCount() == 2) {
             KeyEvent keyEvent = new KeyEvent(existingWebsite_textField, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, KeyEvent.CHAR_UNDEFINED);
@@ -533,11 +565,22 @@ public class myGUI_1 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_searchListMouseClicked
 
-    
     /*
     If icon is clicked, call searchAndDecrypt
-    */
+     */
     private void enterIcon_lblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enterIcon_lblMouseClicked
+       // Check authentification 
+        String res2 = JOptionPane.showInputDialog(rootPane, "Enter Authentification Password", "", JOptionPane.OK_OPTION);
+
+        if (res2 == null) {
+            JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else if (Arrays.equals(res2.toCharArray(), Scrypt_Encrypt_Decrypt.getCharPwd())) {
+            //continue
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "INCORRECT AUTHENTIFICATION", "EEROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         searchAndDecrypt();
     }//GEN-LAST:event_enterIcon_lblMouseClicked
 
@@ -558,7 +601,7 @@ public class myGUI_1 extends javax.swing.JFrame {
 
     /*
     Get url and add to a list
-    */
+     */
     private ArrayList getURL() {
         ArrayList urls = new ArrayList();
 
@@ -582,7 +625,7 @@ public class myGUI_1 extends javax.swing.JFrame {
     /*
     Update jList as user is typing
     for a url
-    */
+     */
     private void searchFilter(String searchTerm) {
         DefaultListModel def = new DefaultListModel();
         ArrayList urls = getURL();
@@ -601,7 +644,7 @@ public class myGUI_1 extends javax.swing.JFrame {
     Method called depedning if user hits enter
     or physcial btn on screen. Perfors search and
     decryption
-    */
+     */
     private void searchAndDecrypt() {
         try {
             /*
@@ -668,7 +711,7 @@ public class myGUI_1 extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(rootPane, "Exit the current 'Dialog Box' before loading a new one", "WARNING", JOptionPane.WARNING_MESSAGE);
         } // End if
-        
+
     } // End 'searchAndDecrypt' method
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

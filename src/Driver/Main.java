@@ -79,6 +79,7 @@ public class Main {
             myGUI_1 myGUI = new myGUI_1();
 
             myGUI.setFocusableWindowState(false);
+            myGUI.setLocationRelativeTo(null);
             myGUI.setVisible(true);
             try {
                 Thread.sleep(1000);
@@ -86,6 +87,7 @@ public class Main {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             myGUI.setFocusableWindowState(true);
+            
 
         });
 

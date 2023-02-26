@@ -12,6 +12,7 @@ public class DialogBox extends javax.swing.JFrame {
     public DialogBox() {
         initComponents();
          setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+         setLocationRelativeTo(null);
     }
 
     /**
