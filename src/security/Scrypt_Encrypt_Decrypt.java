@@ -32,7 +32,7 @@ public class Scrypt_Encrypt_Decrypt {
     private static final ArrayList encryptedValues = new ArrayList();
     public static byte[] globalSalt = null; // Global variable for salt val
     // Char array of authentification password, should be set by user at start of app.
-    public static char[] charPwd = new char[] {'p','a','s','s','w','o','r','d'};
+    public static char[] charPwd = new char[] {'M','e','r','r','i','m','a','c', 'k', '2', '0', '2', '2','!'};
 
     public static SecretKey scrypt(char[]authentificationPass , byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException,
             NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,

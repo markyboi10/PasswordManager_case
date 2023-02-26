@@ -1,5 +1,8 @@
 Password Manager Program:
 
+TO AVOID ANY INITIAL POTENTIAL ISSUES: Clear your json file before running the program for the first time, you will only need to do this
+one time.
+
 What it does: Allows user to create account information, given a valid url, and save it in encrypted
 form to a local json file. Additionally, if a user wishes to retrieve account information, it can do so
 with the search bar.
