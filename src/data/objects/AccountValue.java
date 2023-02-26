@@ -3,8 +3,10 @@ package data.objects;
 import csc3055.json.types.JSONObject;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class AccountValue extends JSONObject {
 
     private final String username;

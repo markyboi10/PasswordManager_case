@@ -41,8 +41,12 @@ public class myGUI extends javax.swing.JFrame {
     private static char[] genPassword = null;
     public static byte[] globalSalt = null;
     public static String saltString = null;
+    public static byte[] finalPasswordByteArray =  null; 
     List<AccountValue> users = new ArrayList<>();
     File vaultFile = new File(VaultManager.getFILE_NAME());
+    DialogBox db = new DialogBox();
+        public static String finalURL = null;
+    public static String finalUser = null;
 
     /**
      * Creates new form myGUI
@@ -71,6 +75,9 @@ public class myGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDialog1 = new javax.swing.JDialog();
+        jDialog2 = new javax.swing.JDialog();
+        jDialog3 = new javax.swing.JDialog();
         root_pane = new keeptoo.KGradientPanel();
         passwordManager_label = new javax.swing.JLabel();
         newAccount_label = new javax.swing.JLabel();
@@ -87,6 +94,39 @@ public class myGUI extends javax.swing.JFrame {
         existingWebsite_label = new javax.swing.JLabel();
         accountInfo_formattedField = new javax.swing.JFormattedTextField();
         passwordField_hiddenField = new javax.swing.JPasswordField();
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
+        jDialog2.getContentPane().setLayout(jDialog2Layout);
+        jDialog2Layout.setHorizontalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog2Layout.setVerticalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialog3Layout = new javax.swing.GroupLayout(jDialog3.getContentPane());
+        jDialog3.getContentPane().setLayout(jDialog3Layout);
+        jDialog3Layout.setHorizontalGroup(
+            jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog3Layout.setVerticalGroup(
+            jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -243,10 +283,11 @@ public class myGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(existingWebsite_label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(newWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(existingWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(existingWebsite_textField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(newWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(root_paneLayout.createSequentialGroup()
@@ -391,19 +432,53 @@ public class myGUI extends javax.swing.JFrame {
                 AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(saltString), existingWebsite_textField.getText());
 
                 // Parameters to be passed in
+                finalURL = accountValues.getUrl();
+                finalUser = accountValues.getUsername();
                 String password = accountValues.getPassword();
                 String iv = accountValues.getIv();
 
                 try {
                     // Decrypt with parameters
                     Scrypt_Encrypt_Decrypt.decrypt(password, iv);
+                    finalPasswordByteArray = Scrypt_Encrypt_Decrypt.decrypt(password, iv);
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeySpecException | IOException ex) {
                     Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
                 } // End inner try-catch
             } catch (IOException ex) {
                 Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
             } // End outer try-catch
+           
+        if (db != null) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DialogBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+            //</editor-fold>
             
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                db.setVisible(true);
+            }
+        });
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Exit the current 'Dialog Box' before loading a new one", "WARNING", JOptionPane.WARNING_MESSAGE);
+        }
+        
         } // End if
         
     }//GEN-LAST:event_existingWebsite_textFieldKeyPressed
@@ -412,7 +487,21 @@ public class myGUI extends javax.swing.JFrame {
         if(passwordField_hiddenField.getPassword().length != 0) {    
             newPassword = passwordField_hiddenField.getPassword();
         }
+        
+        
     }//GEN-LAST:event_passwordField_hiddenFieldFocusLost
+
+    public static byte[] getFinalPasswordByteArray() {
+        return finalPasswordByteArray;
+    }
+
+    public static String getFinalURL() {
+        return finalURL;
+    }
+
+    public static String getFinalUser() {
+        return finalUser;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -422,6 +511,9 @@ public class myGUI extends javax.swing.JFrame {
     private javax.swing.JTextField existingWebsite_textField;
     private javax.swing.JLabel findExistingAccountDetails_label;
     private javax.swing.JButton generatePassword_btn;
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JDialog jDialog2;
+    private javax.swing.JDialog jDialog3;
     private javax.swing.JLabel newAccount_label;
     private static javax.swing.JTextField newPassword_textField;
     private static javax.swing.JTextField newUser_textField;

@@ -3,11 +3,13 @@ package data.objects;
 import csc3055.json.types.JSONObject;
 import data.Accounts;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Holds a salt and accounts object which is a JSONArray of AccountValue objects
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class VaultValue extends JSONObject {
 
     private final String accounts;

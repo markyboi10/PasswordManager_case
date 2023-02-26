@@ -112,7 +112,7 @@ byte[] ciphertext = aesCipher.doFinal(passwordBytes);
 
     } // End 'main' method
 
-    public static void decrypt(String ct, String IV) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, AEADBadTagException, InvalidKeySpecException, IOException {
+    public static byte[] decrypt(String ct, String IV) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, AEADBadTagException, InvalidKeySpecException, IOException {
  
         int tagSize = 128; // 128-bit authentication tag.
         SecretKey key= scrypt(charPwd,globalSalt);
@@ -132,6 +132,8 @@ byte[] ciphertext = aesCipher.doFinal(passwordBytes);
 
         System.out.println("Original password: " + new String(plaintext));
 
+        return plaintext;
+        
     } // End 'decrypt' method
 
 
