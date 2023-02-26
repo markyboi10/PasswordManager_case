@@ -1,102 +1,30 @@
 [
    {
-      "salt" : "s+8UlOw5Pufqj90rebiqbA==",
+      "salt" : "79+BSRjV7WhXAaWpxnH0gA==",
       "accounts" : [
          {
-            "password" : "WoVkUEOl1cRlMs2ZlEKpe1wa72U=",
-            "iv" : "riXA7JP0TPWj0ZdbczWY3A==",
-            "url" : "google.com",
-            "username" : "mark"
+            "password" : "wF2N9weK0D7x8YB6Ov0ZIoOjQKQNDyqrt2T6OGuIcqFhqcFe/989u/ugn9n7S3EE20AqGoIgJPA8sly5HUgRI2EuRZKh/HZ7Cg5kW2U+9aulnwRCm0Q=",
+            "iv" : "SJlSTqkMBirRJaCjQql0bA==",
+            "url" : "https://www.google.com/",
+            "username" : " fd e"
          },
          {
-            "password" : "QAwkS4BnSP/Jle4K9/XtTxV71bZ/C0ZWIK8Md2r2Yu5a9GD6bpJ402h8/+NqnFY+ZceW1eJcf3Cm4wUWEztoJ0grBN52jUoCer7g3ih+sKvBNHEQhWc=",
-            "iv" : "nQesyCM/KF1h7sECAKwj8Q==",
-            "url" : "microsoft.com",
-            "username" : "mark"
+            "password" : "EuptN4JNHs2BHUHzfnslNLfOvdpviLtVWcOZdDnZLTPD2XsscgcxlI45VSClU1QigxLUVwv550UXpR01oa63fJm7LA07Cj6ERTdbxsy4Wjc+OaB1AEw=",
+            "iv" : "7De/VAqh1znx1txxSy+tGw==",
+            "url" : "https://www.w3docs.com/snippets/git/best-and-safe-way-to-merge-a-git-branch-into-master.html",
+            "username" : "cew"
          },
          {
-            "password" : "BVRc8BjvNwzBTbdnX3xjaxjn5bBQlbpxHnuKoIxwt38MnfyO4clpxxn/iG4wvC/RF6zQA3tGzGtNxVam0FSLRGKtXQqh0jDAKS97j5Wp7oS57VOwt0o=",
-            "iv" : "zRTILcc0S4pLnxkBzvQESA==",
-            "url" : "appl.com",
-            "username" : "mark"
+            "password" : "PRr5F+KbYYUKVXNk7nhkyyTen5SDouQaFRY=",
+            "iv" : "v2BFyZKlhdsaHfBGLnsADw==",
+            "url" : "https://stackoverflow.com/questions/26137852/how-to-update-my-working-git-branch-from-another-branch-develop",
+            "username" : "cew"
          },
          {
-            "password" : "mykElHclK9cPDpDJRV0je417zuGQo1wJmtuOsjzAkzIqJO+uR3P593XqjzwGlVsbUc4LTKbZSowZ6wMYa05C8T/US8YWQahFLhRZJeu/kHTDreyFolQ=",
-            "iv" : "079TYPjrQGii6Q7piiQU/Q==",
-            "url" : "google.come",
-            "username" : "mark"
-         },
-         {
-            "password" : "Fk948kBaBA0jlQmNDWLKOG6KZYvl",
-            "iv" : "RppSmiHYUi0wjdUiNzId5A==",
-            "url" : "merr.com",
-            "username" : "testuser"
-         },
-         {
-            "password" : "YYZc2K1VUJaQYAsan20gLefAgiis",
-            "iv" : "a/pYtSp6AyvEwOBKN1NcKA==",
-            "url" : "merr.comm",
-            "username" : "testuser"
-         },
-         {
-            "password" : "DOWFABln00IH23I1hPRFSkGzmZ4=",
-            "iv" : "F2CGATRV4DC8Ky+vDeuO8A==",
-            "url" : "nashua.com",
-            "username" : "david"
-         },
-         {
-            "password" : "nXsMNvuef3NAdjv6fKp9tulYJ+PIdw==",
-            "iv" : "ndCOyYLVbFNFlKrj6GVsHA==",
-            "url" : "youtube.com",
-            "username" : "luna"
-         },
-         {
-            "password" : "q0fiBdDNrDe67kdEXleA5pCWUbf07Q==",
-            "iv" : "Q+12ybPR0l/gk+2ICbEcxQ==",
-            "url" : "youtube.comm",
-            "username" : "luna"
-         },
-         {
-            "password" : "G9kDM3bSet86BbU/hRHhNdRmyybdcg==",
-            "iv" : "3qDjvt7VQxEOzeH4DIxAwA==",
-            "url" : "youtube.comme",
-            "username" : "lunaa"
-         },
-         {
-            "password" : "ap742tnk/zpxjscdm/FsXjuL",
-            "iv" : "F8xeMEragINuvgTGbHPaMw==",
-            "url" : "f",
-            "username" : "f"
-         },
-         {
-            "password" : "XKxuEuCby1XUgXfOiJDQeIt2",
-            "iv" : "hp0GUuIhjyQOfjEnMi2Ykw==",
-            "url" : "ff",
-            "username" : "f"
-         },
-         {
-            "password" : "gj63rOMunikAqORr1NURaCaqtWkVmHBi3A4JlJVf/r18/LiqPu580iNfUw1S2bT90saP9aEcQvrcbaogBU11SCtj5v5B/N48f67hS42JkUdJUMxuUa8=",
-            "iv" : "/fA3D1SjBH2uDuw/AUqMiA==",
-            "url" : "as",
-            "username" : "as"
-         },
-         {
-            "password" : "0btASHVnF25l3v857GtEJP/E9OY=",
-            "iv" : "kM+TbLxvw+tPDW85BYisVQ==",
-            "url" : "as.com",
-            "username" : "as"
-         },
-         {
-            "password" : "hAHbR+EvLyMkKJYUhwIokLvF9gGLiTwdkX2umEvb1gHRhoUkvs8J16EyESA1+zGLOLQ73bAxVM3aNXhVrX9enaU+qUpX8XBmSY5bRPcReLNuUJmFB20=",
-            "iv" : "jUz5IYdVO11ThWulOS/drQ==",
-            "url" : "as.comss",
-            "username" : "as"
-         },
-         {
-            "password" : "qR7fgPZr9YcgEU2DtB61utoyfWJS0ZPhH56i59zkN3IVJFiSeKs3KudDtXttAV4LqTdbtdwjbGqBHqorrtLeC1F/vCddbGvX/ENVz0BOqS60TVgHpT8=",
-            "iv" : "9SiIdmDe0Ri2xHdxv1Qeqg==",
-            "url" : "google",
-            "username" : "luna"
+            "password" : "xpzs3aTHRixrfQI0mSbrD29uSChmZmUaoQFnZHScSgsMAoP122WD7MuPVBxvDENvv72Kzimh9O2A+wFtpyh9+RKHLmEZABi0UlhUm656FIKUBjwQBBo=",
+            "iv" : "XbX+59Ol3QnpDcVygZ6SwA==",
+            "url" : "https://www.focusst.org/threads/direct-fit-lightweight-battery.8486/",
+            "username" : "cew"
          }
       ]
    }
