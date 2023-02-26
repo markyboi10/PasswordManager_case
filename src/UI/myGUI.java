@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import data.managers.VaultManager;
 import data.objects.AccountValue;
 import data.objects.VaultValue;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -25,8 +26,11 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.LineBorder;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.validator.UrlValidator;
 import security.Scrypt_Encrypt_Decrypt;
@@ -59,6 +63,7 @@ public class myGUI extends javax.swing.JFrame {
      */
     public myGUI() {
         initComponents(); // Sets gui components
+ 
         try {
             // If file contains data, read it and set salt
             if (vaultFile.length() != 0) {
@@ -66,11 +71,12 @@ public class myGUI extends javax.swing.JFrame {
                 JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
                 saltString = rootNode.get(0).get("salt").asText();
                 globalSalt = Base64.getDecoder().decode(saltString);
-                //this.bindData();
+                this.bindData();
             }
         } catch (IOException ex) {
             Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         
     } // End contructor 'myGUI'
 
@@ -102,6 +108,7 @@ public class myGUI extends javax.swing.JFrame {
         passwordField_hiddenField = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -148,7 +155,7 @@ public class myGUI extends javax.swing.JFrame {
 
         newAccount_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         newAccount_label.setForeground(new java.awt.Color(204, 204, 204));
-        newAccount_label.setText("New Account:");
+        newAccount_label.setText("Add New Account:");
 
         newUser_textField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -162,12 +169,15 @@ public class myGUI extends javax.swing.JFrame {
         });
 
         username_label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        username_label.setForeground(new java.awt.Color(204, 204, 204));
         username_label.setText("Username:");
 
         password_label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        password_label.setForeground(new java.awt.Color(204, 204, 204));
         password_label.setText("Password:");
 
         website_label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        website_label.setForeground(new java.awt.Color(204, 204, 204));
         website_label.setText("Website:");
 
         newWebsite_textField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -210,9 +220,11 @@ public class myGUI extends javax.swing.JFrame {
         });
 
         findExistingAccountDetails_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        findExistingAccountDetails_label.setText("Find Existing Account Details:");
+        findExistingAccountDetails_label.setForeground(new java.awt.Color(204, 204, 204));
+        findExistingAccountDetails_label.setText("Search Existing Account:");
 
         existingWebsite_label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        existingWebsite_label.setForeground(new java.awt.Color(204, 204, 204));
         existingWebsite_label.setText("Website:");
 
         passwordField_hiddenField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -228,74 +240,78 @@ public class myGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UI/macEnterBtn.png"))); // NOI18N
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout root_paneLayout = new javax.swing.GroupLayout(root_pane);
         root_pane.setLayout(root_paneLayout);
         root_paneLayout.setHorizontalGroup(
             root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, root_paneLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
+            .addGroup(root_paneLayout.createSequentialGroup()
                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(root_paneLayout.createSequentialGroup()
+                        .addGap(23, 23, 23)
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(newAccount_label, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, root_paneLayout.createSequentialGroup()
-                                    .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(newWebsite_textField))
-                                .addGroup(root_paneLayout.createSequentialGroup()
-                                    .addComponent(username_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(newUser_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(root_paneLayout.createSequentialGroup()
-                                .addComponent(password_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(root_paneLayout.createSequentialGroup()
+                                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(root_paneLayout.createSequentialGroup()
+                                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                    .addComponent(username_label, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                                                    .addComponent(password_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(root_paneLayout.createSequentialGroup()
+                                                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                            .addComponent(addToManager_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                            .addComponent(passwordField_hiddenField, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(generatePassword_btn))
+                                                    .addComponent(newUser_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(154, 154, 154))
+                                            .addGroup(root_paneLayout.createSequentialGroup()
+                                                .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(newWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(existingWebsite_label, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(existingWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(findExistingAccountDetails_label, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(addToManager_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(passwordField_hiddenField, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(generatePassword_btn)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, root_paneLayout.createSequentialGroup()
-                                .addComponent(findExistingAccountDetails_label)
-                                .addGap(43, 43, 43))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, root_paneLayout.createSequentialGroup()
-                                .addComponent(existingWebsite_label, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane1)
-                                    .addComponent(existingWebsite_textField))
-                                .addGap(19, 19, 19))))
+                                .addComponent(jLabel1))
+                            .addComponent(newAccount_label, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(root_paneLayout.createSequentialGroup()
-                        .addGap(215, 215, 215)
-                        .addComponent(passwordManager_label)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(251, 251, 251)
+                        .addComponent(passwordManager_label)))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         root_paneLayout.setVerticalGroup(
             root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(root_paneLayout.createSequentialGroup()
                 .addComponent(passwordManager_label)
-                .addGap(24, 24, 24)
-                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(newAccount_label)
-                    .addComponent(findExistingAccountDetails_label))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(existingWebsite_label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(root_paneLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(newAccount_label)
+                            .addComponent(findExistingAccountDetails_label))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(website_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(newWebsite_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(existingWebsite_textField))
-                .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(root_paneLayout.createSequentialGroup()
-                        .addGap(56, 56, 56)
+                        .addGap(76, 76, 76)
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(username_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(newUser_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(56, 56, 56)
+                            .addComponent(newUser_textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(username_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                         .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(password_label, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(generatePassword_btn)
@@ -303,22 +319,27 @@ public class myGUI extends javax.swing.JFrame {
                         .addGap(43, 43, 43)
                         .addComponent(addToManager_btn))
                     .addGroup(root_paneLayout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(existingWebsite_textField)
+                                .addComponent(existingWebsite_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(30, 30, 30))
+                        .addComponent(jScrollPane1)
+                        .addGap(14, 14, 14)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(root_pane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(root_pane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(root_pane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(root_pane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -345,7 +366,7 @@ public class myGUI extends javax.swing.JFrame {
              // do not initiate action performed, break out of it
             JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
             return;
-        } else if (newPassword != null && newPassword.length >= 1 && newPassword.length <= 7) {   
+        } else if (passwordField_hiddenField.getPassword().length > 0 && newPassword != null && newPassword.length >= 1 && newPassword.length <= 7) {   
             int res = JOptionPane.showConfirmDialog(rootPane, "Weak password. It is highly recommended have AT LEAST 8 characters!", "WARNING", JOptionPane.OK_CANCEL_OPTION);
             if(res == JOptionPane.OK_OPTION) {
                 //continue
@@ -358,16 +379,25 @@ public class myGUI extends javax.swing.JFrame {
 
         boolean urlExists = false;
         if (vaultFile.length() != 0) {
-            List<AccountValue> accounts = vaultManager.getAccountsFromVault(saltString); // Call getAccountsFromVault 
-            // Loop through the list
-            for (AccountValue account : accounts) {
-                // If URL already exists, set boolean true and break
-                if (account.getUrl().equals(newURL)) {
-                    urlExists = true;
-                    break;
-                } // End inner-if
-            } // End for
-        } // End outer-if
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
+                saltString = rootNode.get(0).get("salt").asText();
+                globalSalt = Base64.getDecoder().decode(saltString);
+                List<AccountValue> accounts = vaultManager.getAccountsFromVault(saltString); // Call getAccountsFromVault
+                // Loop through the list
+                for (AccountValue account : accounts) {
+                    // If URL already exists, set boolean true and break
+                    if (account.getUrl().equals(newURL)) {
+                        urlExists = true;
+                        break;
+                    } // End inner-if
+                } // End for
+            } // End outer-if
+            catch (IOException ex) {
+                Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         
         // If url exists, error message sends
         if (urlExists) {
@@ -375,11 +405,14 @@ public class myGUI extends javax.swing.JFrame {
         } else { // Else, add account to vault
             try {
                 // Encrypt generated password
-                if (passwordField_hiddenField.getPassword().length == 0) {
+                if (passwordField_hiddenField.getPassword().length == 0 && genPassword != null) {
                     System.out.println("gen" + Arrays.toString(genPassword));
                     Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, genPassword);
-                } else { // Encrypt user's password
+                    genPassword = null;
+                } else if (passwordField_hiddenField.getPassword().length != 0 && newPassword != null){ // Encrypt user's password
                     Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, newPassword);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | IOException ex) {
                 Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -398,16 +431,18 @@ public class myGUI extends javax.swing.JFrame {
     private void newWebsite_textFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newWebsite_textFieldFocusLost
         newURL = newWebsite_textField.getText();
         
-//        UrlValidator urlValidator = new UrlValidator();
-//        if (newURL.length() > 0) {
-//        if (urlValidator.isValid(newURL)) {
-//            //comtinue 
-//
-//        } else {
-//            newWebsite_textField.setText("");
-//            JOptionPane.showMessageDialog(rootPane, "Invalid URL", "EEROR", JOptionPane.ERROR_MESSAGE);
-//        }
-//        }
+        UrlValidator urlValidator = new UrlValidator();
+        if (newURL.length() > 0) {
+        if (urlValidator.isValid(newURL)) {
+             newWebsite_textField.setBorder(new JTextField().getBorder());
+
+        } else {
+            newWebsite_textField.setText("");
+             newWebsite_textField.setBorder(new LineBorder(Color.RED));
+            JOptionPane.showMessageDialog(rootPane, "Invalid URL", "EEROR", JOptionPane.ERROR_MESSAGE);
+           
+        }
+        }
     }//GEN-LAST:event_newWebsite_textFieldFocusLost
 
     /*
@@ -447,75 +482,94 @@ public class myGUI extends javax.swing.JFrame {
     the url.
     */
     private void existingWebsite_textFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_existingWebsite_textFieldKeyPressed
-        // If enter is pressed
-    
-            try {
-                /*
-                Grab salt from file
-                */
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
-                saltString = rootNode.get(0).get("salt").asText();
-                globalSalt = Base64.getDecoder().decode(saltString);
-                
-
-                // Grab account values given salt and url
-                AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(saltString), existingWebsite_textField.getText());
-                System.out.println(accountValues);
-                System.out.println(saltString);
-                System.out.println(existingWebsite_textField.getText());
-                // Parameters to be passed in
-                finalURL = accountValues.getUrl();
-                finalUser = accountValues.getUsername();
-                String password = accountValues.getPassword();
-                String iv = accountValues.getIv();
-
-                                        getURL();
-               searchFilter(existingWebsite_textField.getText());
-                
-                try {
-                    // Decrypt with parameters
-                    Scrypt_Encrypt_Decrypt.decrypt(password, iv);
-                    finalPasswordByteArray = Scrypt_Encrypt_Decrypt.decrypt(password, iv);
-                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeySpecException | IOException ex) {
-                    Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
-                } // End inner try-catch
-            } catch (IOException ex) {
-                Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
-            } // End outer try-catch
-           
-        if (db != null) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DialogBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-            //</editor-fold>
-            
-        //</editor-fold>
+            // If enter is pressed
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
+            saltString = rootNode.get(0).get("salt").asText();
+            globalSalt = Base64.getDecoder().decode(saltString);
+            searchFilter(existingWebsite_textField.getText());
+            if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+                
+                
+                //            try {
+//                /*
+//                Grab salt from file
+//                */
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                db.setVisible(true);
+
+test();
+//
+//
+//                // Grab account values given salt and url
+//                AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(saltString), existingWebsite_textField.getText());
+//
+//                 if (accountValues !=  null) {
+//
+//
+//                
+//                System.out.println(accountValues);
+//                System.out.println(saltString);
+//                System.out.println(existingWebsite_textField.getText());
+//                // Parameters to be passed in
+//                finalURL = accountValues.getUrl();
+//                finalUser = accountValues.getUsername();
+//                String password = accountValues.getPassword();
+//                String iv = accountValues.getIv();
+//
+//                                        getURL();
+//
+//                
+//                try {
+//                    // Decrypt with parameters
+//                    Scrypt_Encrypt_Decrypt.decrypt(password, iv);
+//                    finalPasswordByteArray = Scrypt_Encrypt_Decrypt.decrypt(password, iv);
+//                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeySpecException | IOException ex) {
+//                    Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                } // End inner try-catch
+//                 
+//               } else {
+//                     System.out.println("URL NOT FOUND");
+//                     return;
+//                 }
+//            } catch (IOException ex) {
+//                Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+//            } // End outer try-catch
+//
+//         
+//        if (db != null) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(DialogBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//            //</editor-fold>
+//            
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(() -> {
+//            db.setVisible(true);
+//            setDefaultCloseOperation(DialogBox.DISPOSE_ON_CLOSE);
+//        });
+//        } else {
+//            JOptionPane.showMessageDialog(rootPane, "Exit the current 'Dialog Box' before loading a new one", "WARNING", JOptionPane.WARNING_MESSAGE);
+//        }
+                
             }
-        });
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Exit the current 'Dialog Box' before loading a new one", "WARNING", JOptionPane.WARNING_MESSAGE);
+        } catch (IOException ex) {
+            Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-     
         
     }//GEN-LAST:event_existingWebsite_textFieldKeyPressed
 
@@ -544,6 +598,11 @@ public class myGUI extends javax.swing.JFrame {
             existingWebsite_textField.setText(index);
         }
     }//GEN-LAST:event_jList1MouseClicked
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+       System.out.println("Hello");
+       test();
+    }//GEN-LAST:event_jLabel1MouseClicked
 
     public static byte[] getFinalPasswordByteArray() {
         return finalPasswordByteArray;
@@ -591,6 +650,83 @@ public class myGUI extends javax.swing.JFrame {
         defaultListModel=def;
         jList1.setModel(defaultListModel);
     }
+    
+    private void test() {
+                   try {
+                /*
+                Grab salt from file
+                */
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
+                saltString = rootNode.get(0).get("salt").asText();
+                globalSalt = Base64.getDecoder().decode(saltString);
+                
+
+                // Grab account values given salt and url
+                AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(saltString), existingWebsite_textField.getText());
+
+                 if (accountValues !=  null) {
+                        
+                        
+                
+                System.out.println(accountValues);
+                System.out.println(saltString);
+                System.out.println(existingWebsite_textField.getText());
+                // Parameters to be passed in
+                finalURL = accountValues.getUrl();
+                finalUser = accountValues.getUsername();
+                String password = accountValues.getPassword();
+                String iv = accountValues.getIv();
+
+                                        getURL();
+               
+                
+                try {
+                    // Decrypt with parameters
+                    Scrypt_Encrypt_Decrypt.decrypt(password, iv);
+                    finalPasswordByteArray = Scrypt_Encrypt_Decrypt.decrypt(password, iv);
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeySpecException | IOException ex) {
+                    Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } // End inner try-catch
+                 
+               } else {
+                     System.out.println("URL NOT FOUND");
+                     return;
+                 }
+            } catch (IOException ex) {
+                Logger.getLogger(myGUI.class.getName()).log(Level.SEVERE, null, ex);
+            } // End outer try-catch
+            
+         
+        if (db != null) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DialogBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+            //</editor-fold>
+            
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            db.setVisible(true);
+            setDefaultCloseOperation(DialogBox.DISPOSE_ON_CLOSE);
+        });
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Exit the current 'Dialog Box' before loading a new one", "WARNING", JOptionPane.WARNING_MESSAGE);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addToManager_btn;
@@ -601,6 +737,7 @@ public class myGUI extends javax.swing.JFrame {
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
     private javax.swing.JDialog jDialog3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel newAccount_label;

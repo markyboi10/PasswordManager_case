@@ -1,5 +1,6 @@
 package Driver;
 
+import UI.DialogBox;
 import UI.myGUI;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,6 +101,7 @@ public class Main {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
 myGUI.setFocusableWindowState(true);
+        
         });
 
 

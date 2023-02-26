@@ -17,7 +17,7 @@ public class DialogBox extends javax.swing.JFrame {
      */
     public DialogBox() {
         initComponents();
-
+         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -40,6 +40,11 @@ public class DialogBox extends javax.swing.JFrame {
         displayCredentials_btn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         credentials_root_pane.setkEndColor(new java.awt.Color(176, 106, 179));
         credentials_root_pane.setkGradientFocus(850);
@@ -72,7 +77,7 @@ public class DialogBox extends javax.swing.JFrame {
         credentials_root_paneLayout.setHorizontalGroup(
             credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, credentials_root_paneLayout.createSequentialGroup()
-                .addContainerGap(56, Short.MAX_VALUE)
+                .addContainerGap(59, Short.MAX_VALUE)
                 .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(password_lbl)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, credentials_root_paneLayout.createSequentialGroup()
@@ -134,64 +139,22 @@ public class DialogBox extends javax.swing.JFrame {
         username_textfield.setText(myGUI.getFinalUser());
     }//GEN-LAST:event_displayCredentials_btnActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+                password_textfield.setText("");
+        website_textfield.setText("");
+        username_textfield.setText("");
+    }//GEN-LAST:event_formWindowClosing
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addToManager_btn;
-    private javax.swing.JButton addToManager_btn1;
-    private javax.swing.JButton addToManager_btn2;
     private javax.swing.JLabel credentials_label;
     private keeptoo.KGradientPanel credentials_root_pane;
     private javax.swing.JButton displayCredentials_btn;
-    private javax.swing.JLabel existingWebsite_label;
-    private javax.swing.JLabel existingWebsite_label1;
-    private javax.swing.JLabel existingWebsite_label2;
-    private javax.swing.JTextField existingWebsite_textField;
-    private javax.swing.JTextField existingWebsite_textField1;
-    private javax.swing.JTextField existingWebsite_textField2;
-    private javax.swing.JLabel findExistingAccountDetails_label;
-    private javax.swing.JLabel findExistingAccountDetails_label1;
-    private javax.swing.JLabel findExistingAccountDetails_label2;
-    private javax.swing.JButton generatePassword_btn;
-    private javax.swing.JButton generatePassword_btn1;
-    private javax.swing.JButton generatePassword_btn2;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
-    private javax.swing.JList<String> jList3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JLabel newAccount_label;
-    private javax.swing.JLabel newAccount_label1;
-    private javax.swing.JLabel newAccount_label2;
-    private static javax.swing.JTextField newUser_textField;
-    private static javax.swing.JTextField newUser_textField1;
-    private static javax.swing.JTextField newUser_textField2;
-    private static javax.swing.JTextField newWebsite_textField;
-    private static javax.swing.JTextField newWebsite_textField1;
-    private static javax.swing.JTextField newWebsite_textField2;
-    private javax.swing.JPasswordField passwordField_hiddenField;
-    private javax.swing.JPasswordField passwordField_hiddenField1;
-    private javax.swing.JPasswordField passwordField_hiddenField2;
-    private javax.swing.JLabel passwordManager_label;
-    private javax.swing.JLabel passwordManager_label1;
-    private javax.swing.JLabel passwordManager_label2;
-    private javax.swing.JLabel password_label;
-    private javax.swing.JLabel password_label1;
-    private javax.swing.JLabel password_label2;
     private javax.swing.JLabel password_lbl;
     private javax.swing.JTextField password_textfield;
-    private keeptoo.KGradientPanel root_pane;
-    private keeptoo.KGradientPanel root_pane1;
-    private keeptoo.KGradientPanel root_pane2;
-    private javax.swing.JLabel username_label;
-    private javax.swing.JLabel username_label1;
-    private javax.swing.JLabel username_label2;
     private javax.swing.JLabel username_lbl;
     private javax.swing.JTextField username_textfield;
-    private javax.swing.JLabel website_label;
-    private javax.swing.JLabel website_label1;
-    private javax.swing.JLabel website_label2;
     private javax.swing.JLabel website_lbl;
     private javax.swing.JTextField website_textfield;
     // End of variables declaration//GEN-END:variables
