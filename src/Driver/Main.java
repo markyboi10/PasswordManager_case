@@ -13,6 +13,8 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import static security.Scrypt_Encrypt_Decrypt.globalSalt;
 
 /**
@@ -29,6 +31,11 @@ public class Main {
     public static String saltString = null;
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         /**
          * Initialize manager
          */
@@ -77,7 +84,7 @@ public class Main {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             myGUI_1 myGUI = new myGUI_1();
-
+            
             myGUI.setFocusableWindowState(false);
             myGUI.setLocationRelativeTo(null);
             myGUI.setVisible(true);

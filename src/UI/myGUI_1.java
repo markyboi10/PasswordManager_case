@@ -365,7 +365,7 @@ public class myGUI_1 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
             return;
         } else if (passwordField_hiddenField.getPassword().length > 0 && newPassword != null && newPassword.length >= 1 && newPassword.length < 7) {
-            int res = JOptionPane.showConfirmDialog(rootPane, "Weak password. It is highly recommended have AT LEAST 8 characters!", "WARNING", JOptionPane.OK_CANCEL_OPTION);
+            int res = JOptionPane.showConfirmDialog(rootPane, "Weak password. It is highly recommended have AT LEAST 7 characters!", "WARNING", JOptionPane.OK_CANCEL_OPTION);
             if (res == JOptionPane.OK_OPTION) {
                 //continue
 
@@ -413,22 +413,17 @@ public class myGUI_1 extends javax.swing.JFrame {
         // If url exists, error message sends
         if (urlExists) {
             JOptionPane.showMessageDialog(rootPane, "URL already contains an account!", "ERROR", JOptionPane.ERROR_MESSAGE);
-        } else { // Else, add account to vault
-            try {
-                // Encrypt generated password
-                if (passwordField_hiddenField.getPassword().length == 0 && genPassword != null) {
-                    Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, genPassword);
-                    JOptionPane.showMessageDialog(rootPane, "Account successfully added", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    genPassword = null;
-                } else if (passwordField_hiddenField.getPassword().length != 0 && newPassword != null) { // Encrypt user's password
-                    Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, newPassword);
-                    JOptionPane.showMessageDialog(rootPane, "Account successfully added", "Info", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | IOException ex) {
-                Logger.getLogger(myGUI_1.class.getName()).log(Level.SEVERE, null, ex);
-            } // End try-catch
+        } else { // Encrypt generated password
+            if (passwordField_hiddenField.getPassword().length == 0 && genPassword != null) {
+                Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, genPassword);
+                JOptionPane.showMessageDialog(rootPane, "Account successfully added", "Info", JOptionPane.INFORMATION_MESSAGE);
+                genPassword = null;
+            } else if (passwordField_hiddenField.getPassword().length != 0 && newPassword != null) { // Encrypt user's password
+                Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, newPassword);
+                JOptionPane.showMessageDialog(rootPane, "Account successfully added", "Info", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
+            }
 
         } // End if-else
         
@@ -667,13 +662,9 @@ public class myGUI_1 extends javax.swing.JFrame {
 
                 getURL();
 
-                try {
-                    // Decrypt with parameters
-                    Scrypt_Encrypt_Decrypt.decrypt(password, iv);
-                    finalPasswordByteArray = Scrypt_Encrypt_Decrypt.decrypt(password, iv);
-                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeySpecException | IOException ex) {
-                    Logger.getLogger(myGUI_1.class.getName()).log(Level.SEVERE, null, ex);
-                } // End inner try-catch
+                // Decrypt with parameters
+                Scrypt_Encrypt_Decrypt.decrypt(password, iv);
+                finalPasswordByteArray = Scrypt_Encrypt_Decrypt.decrypt(password, iv);
 
             } else {
                 JOptionPane.showMessageDialog(rootPane, "URL does not exist", "EEROR", JOptionPane.ERROR_MESSAGE);

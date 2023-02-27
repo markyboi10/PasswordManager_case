@@ -13,6 +13,8 @@ public class DialogBox extends javax.swing.JFrame {
         initComponents();
          setDefaultCloseOperation(DISPOSE_ON_CLOSE);
          setLocationRelativeTo(null);
+          // Set the tool tip text for the panel
+        
     }
 
     /**
@@ -41,6 +43,7 @@ public class DialogBox extends javax.swing.JFrame {
             }
         });
 
+        credentials_root_pane.setToolTipText("Click on 'Display Credentials' to view account details. Be sure NO unauthorized individual is looking at your screen!");
         credentials_root_pane.setkEndColor(new java.awt.Color(176, 106, 179));
         credentials_root_pane.setkGradientFocus(850);
         credentials_root_pane.setkStartColor(new java.awt.Color(69, 104, 220));
@@ -61,7 +64,7 @@ public class DialogBox extends javax.swing.JFrame {
 
         username_lbl.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         username_lbl.setForeground(new java.awt.Color(204, 204, 204));
-        username_lbl.setText("Username");
+        username_lbl.setText("Username:");
 
         password_lbl.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         password_lbl.setForeground(new java.awt.Color(204, 204, 204));
@@ -79,43 +82,38 @@ public class DialogBox extends javax.swing.JFrame {
         credentials_root_paneLayout.setHorizontalGroup(
             credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, credentials_root_paneLayout.createSequentialGroup()
-                .addContainerGap(59, Short.MAX_VALUE)
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(password_lbl)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, credentials_root_paneLayout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(credentials_label)
-                        .addGap(124, 124, 124))
-                    .addGroup(credentials_root_paneLayout.createSequentialGroup()
-                        .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(username_lbl)
-                            .addComponent(website_lbl))
-                        .addGap(27, 27, 27)
-                        .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(displayCredentials_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(password_textfield, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                                .addComponent(username_textfield)
-                                .addComponent(website_textfield))))))
+                    .addComponent(password_lbl, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(username_lbl, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(website_lbl, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(website_textfield)
+                    .addComponent(credentials_label)
+                    .addComponent(username_textfield)
+                    .addComponent(password_textfield)
+                    .addComponent(displayCredentials_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
+                .addGap(75, 75, 75))
         );
         credentials_root_paneLayout.setVerticalGroup(
             credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(credentials_root_paneLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(17, 17, 17)
                 .addComponent(credentials_label)
-                .addGap(26, 26, 26)
+                .addGap(32, 32, 32)
                 .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(website_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(website_lbl))
-                .addGap(27, 27, 27)
+                .addGap(38, 38, 38)
                 .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(username_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(username_lbl))
-                .addGap(31, 31, 31)
+                .addGap(42, 42, 42)
                 .addGroup(credentials_root_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(password_textfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(password_lbl))
-                .addGap(45, 45, 45)
+                .addGap(36, 36, 36)
                 .addComponent(displayCredentials_btn)
                 .addContainerGap(32, Short.MAX_VALUE))
         );
@@ -128,7 +126,7 @@ public class DialogBox extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(credentials_root_pane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(credentials_root_pane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
