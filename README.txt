@@ -9,6 +9,14 @@ with the search bar.
 
 How to use:
 
+*Make sure you have the Jar files downloaded or added to the project in 'Required Jar Files'
+
+1. Run from IDE. BE SURE to view json file from the home directory of the project
+and not the dist folder.
+2. Run from command prompt using executable jar. Simple set directory using 'cd' followed
+by the project folder path 'dist'. Then just type 'java -jar PasswordManager.jar' to run.
+BE SURE to view json file in the dist and not the home directory of the project.
+
 To create a new account, you must:
  - Enter a valid url
  - Enter a username of your choice
