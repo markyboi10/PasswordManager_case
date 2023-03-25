@@ -133,10 +133,12 @@ public class DialogBox extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void displayCredentials_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_displayCredentials_btnActionPerformed
+  
         String finalStringPass = new String(myGUI_1.getFinalPasswordByteArray());
         password_textfield.setText(finalStringPass);
         website_textfield.setText(myGUI_1.getFinalURL());
         username_textfield.setText(myGUI_1.getFinalUser());
+        finalStringPass = null;
     }//GEN-LAST:event_displayCredentials_btnActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

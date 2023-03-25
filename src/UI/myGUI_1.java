@@ -21,11 +21,13 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.AEADBadTagException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
@@ -56,6 +58,7 @@ public class myGUI_1 extends javax.swing.JFrame {
     public static String finalUser = null;
     public static String enteredAuthPass = null;
     DefaultListModel defaultListModel = new DefaultListModel();
+    private JPasswordField passwordField = new JPasswordField();
 
 
     /**
@@ -375,16 +378,22 @@ public class myGUI_1 extends javax.swing.JFrame {
 
         }
 
+        char[] masterPass = null;
         // Call authentification
-        String res2 = JOptionPane.showInputDialog(rootPane, "Enter Authentification Password", "", JOptionPane.OK_OPTION);
+        int result = JOptionPane.showConfirmDialog(rootPane, passwordField, "Enter Authentication Password", JOptionPane.OK_CANCEL_OPTION);
 
-        if (res2 == null) {
-            JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else if (Arrays.equals(res2.toCharArray(), Scrypt_Encrypt_Decrypt.getCharPwd())) {
-            //continue
+        if (result == JOptionPane.OK_OPTION) {
+            // user clicked OK
+            masterPass = passwordField.getPassword();
+            if (masterPass.length == 0) {
+                JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
+                passwordField.setText(null);
+                return;
+            }
+            passwordField.setText(null);
         } else {
             JOptionPane.showMessageDialog(rootPane, "INCORRECT AUTHENTIFICATION", "EEROR", JOptionPane.ERROR_MESSAGE);
+            passwordField.setText(null);
             return;
         }
 
@@ -415,11 +424,14 @@ public class myGUI_1 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "URL already contains an account!", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else { // Encrypt generated password
             if (passwordField_hiddenField.getPassword().length == 0 && genPassword != null) {
-                Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, genPassword);
+                Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, genPassword, masterPass);
                 JOptionPane.showMessageDialog(rootPane, "Account successfully added", "Info", JOptionPane.INFORMATION_MESSAGE);
                 genPassword = null;
+                masterPass = null;
             } else if (passwordField_hiddenField.getPassword().length != 0 && newPassword != null) { // Encrypt user's password
-                Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, newPassword);
+                Scrypt_Encrypt_Decrypt.encrypt(newURL, newUser, newPassword, masterPass);
+                masterPass = null;
+                newPassword = null;
                 JOptionPane.showMessageDialog(rootPane, "Account successfully added", "Info", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Missing information, please fill out all fields", "EEROR", JOptionPane.ERROR_MESSAGE);
@@ -481,6 +493,7 @@ public class myGUI_1 extends javax.swing.JFrame {
             if (res == JOptionPane.OK_OPTION) {
                 ActionEvent actionEvent = new ActionEvent(evt.getSource(), evt.getID(), "");
                 addToManager_btnActionPerformed(actionEvent);
+                genPassword = null;
             } else {
                 // nothing
                 
@@ -501,6 +514,7 @@ public class myGUI_1 extends javax.swing.JFrame {
      */
     private void existingWebsite_textFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_existingWebsite_textFieldKeyPressed
         try {
+            char[] masterPass = null;
             // If enter is pressed
             if (vaultFile.length() != 0) {
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -509,18 +523,26 @@ public class myGUI_1 extends javax.swing.JFrame {
                 globalSalt = Base64.getDecoder().decode(saltString);
                 searchFilter(existingWebsite_textField.getText());
                 if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String res2 = JOptionPane.showInputDialog(rootPane, "Enter Authentification Password","", JOptionPane.OK_OPTION);
 
-                    if (res2 == null) {
-                        JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    } else if (Arrays.equals(res2.toCharArray(), Scrypt_Encrypt_Decrypt.getCharPwd())) {
-                        //continue
+                    // Call authentification
+                    int result = JOptionPane.showConfirmDialog(rootPane, passwordField, "Enter Authentication Password", JOptionPane.OK_CANCEL_OPTION);
+
+                    if (result == JOptionPane.OK_OPTION) {
+                        // user clicked OK
+                        masterPass = passwordField.getPassword();
+                        if (masterPass.length == 0) {
+                            JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
+                            passwordField.setText(null);
+                            return;
+                        }
+                        passwordField.setText(null);
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "INCORRECT AUTHENTIFICATION", "EEROR", JOptionPane.ERROR_MESSAGE);
+                        passwordField.setText(null);
                         return;
                     }
-                    searchAndDecrypt();
+                    searchAndDecrypt(masterPass);
+                    masterPass = null;
                 }
             } else {
                 //do nothing
@@ -564,19 +586,26 @@ public class myGUI_1 extends javax.swing.JFrame {
     If icon is clicked, call searchAndDecrypt
      */
     private void enterIcon_lblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enterIcon_lblMouseClicked
-       // Check authentification 
-        String res2 = JOptionPane.showInputDialog(rootPane, "Enter Authentification Password", "", JOptionPane.OK_OPTION);
+        char[] masterPass = null;
+        // Call authentification
+        int result = JOptionPane.showConfirmDialog(rootPane, passwordField, "Enter Authentication Password", JOptionPane.OK_CANCEL_OPTION);
 
-        if (res2 == null) {
-            JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else if (Arrays.equals(res2.toCharArray(), Scrypt_Encrypt_Decrypt.getCharPwd())) {
-            //continue
+        if (result == JOptionPane.OK_OPTION) {
+            // user clicked OK
+            masterPass = passwordField.getPassword();
+            if (masterPass.length == 0) {
+                JOptionPane.showMessageDialog(rootPane, "NO INPUT DETECTED", "EEROR", JOptionPane.ERROR_MESSAGE);
+                passwordField.setText(null);
+                return;
+            }
+            passwordField.setText(null);
         } else {
             JOptionPane.showMessageDialog(rootPane, "INCORRECT AUTHENTIFICATION", "EEROR", JOptionPane.ERROR_MESSAGE);
+            passwordField.setText(null);
             return;
         }
-        searchAndDecrypt();
+        searchAndDecrypt(masterPass);
+        masterPass = null;
     }//GEN-LAST:event_enterIcon_lblMouseClicked
 
     // Grab password to display
@@ -640,7 +669,7 @@ public class myGUI_1 extends javax.swing.JFrame {
     or physcial btn on screen. Perfors search and
     decryption
      */
-    private void searchAndDecrypt() {
+    private void searchAndDecrypt(char[] masterPass) {
         try {
             /*
                 Grab salt from file
@@ -663,8 +692,13 @@ public class myGUI_1 extends javax.swing.JFrame {
                 getURL();
 
                 // Decrypt with parameters
-                Scrypt_Encrypt_Decrypt.decrypt(password, iv);
-                finalPasswordByteArray = Scrypt_Encrypt_Decrypt.decrypt(password, iv);
+                try {
+                Scrypt_Encrypt_Decrypt.decrypt(password, iv, masterPass);
+                } catch(Exception e) {
+                    return;
+                }
+                finalPasswordByteArray = Scrypt_Encrypt_Decrypt.decrypt(password, iv, masterPass);
+                masterPass = null;
 
             } else {
                 JOptionPane.showMessageDialog(rootPane, "URL does not exist", "EEROR", JOptionPane.ERROR_MESSAGE);
@@ -674,7 +708,7 @@ public class myGUI_1 extends javax.swing.JFrame {
             Logger.getLogger(myGUI_1.class.getName()).log(Level.SEVERE, null, ex);
         } // End outer try-catch
 
-        if (db != null) {
+        if (db != null && finalPasswordByteArray != null) {
             /* Set the Nimbus look and feel */
             //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
             /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -700,16 +734,20 @@ public class myGUI_1 extends javax.swing.JFrame {
                 setDefaultCloseOperation(DialogBox.DISPOSE_ON_CLOSE);
             });
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Exit the current 'Dialog Box' before loading a new one", "WARNING", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Incorrect Credentials", "WARNING", JOptionPane.WARNING_MESSAGE);
         } // End if
 
     } // End 'searchAndDecrypt' method
 
+    public JTextField getExistingWebsite_textField() {
+        return existingWebsite_textField;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addToManager_btn;
     private javax.swing.JLabel enterIcon_lbl;
     private javax.swing.JLabel existingWebsite_label;
-    private javax.swing.JTextField existingWebsite_textField;
+    public static javax.swing.JTextField existingWebsite_textField;
     private javax.swing.JLabel findExistingAccountDetails_label;
     private javax.swing.JButton generatePassword_btn;
     private javax.swing.JDialog jDialog1;

@@ -1,6 +1,17 @@
 package security;
 
 import static Driver.Main.vaultManager;
+import UI.myGUI_1;
+import static UI.myGUI_1.finalURL;
+import static UI.myGUI_1.finalUser;
+import static UI.myGUI_1.saltString;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import data.managers.VaultManager;
+import data.objects.AccountValue;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -32,7 +43,7 @@ public class Scrypt_Encrypt_Decrypt {
     private static final ArrayList encryptedValues = new ArrayList();
     public static byte[] globalSalt = null; // Global variable for salt val
     // Char array of authentification password, should be set by user at start of app.
-    public static char[] charPwd = new char[]{'M', 'e', 'r', 'r', 'i', 'm', 'a', 'c', 'k', '2', '0', '2', '2', '!'};
+    public static char[] charPwd = null;
 
     public static SecretKey scrypt(char[] authentificationPass, byte[] salt) {
         char[] authPass = authentificationPass;
@@ -41,11 +52,10 @@ public class Scrypt_Encrypt_Decrypt {
         Objects
          */
         // Default values given by project description
-        final int cost = 2048; // Iterations
-        final int blockSize = 8;
-        final int parallelization = 1; // Num of parallel threads to use
-        final int keySize = 128;
-        final int tagSize = 128;
+        final int cost = 32768; // Iterations
+        final int blockSize = 32;
+        final int parallelization = 4; // Num of parallel threads to use
+        final int keySize = 256;
         ScryptKeySpec scryptSpec;
 
         // Register bouncy castle provider.
@@ -71,10 +81,10 @@ public class Scrypt_Encrypt_Decrypt {
 
     } // Enm 'scrypt' method
 
-    public static ArrayList encrypt(String newURL, String newUser, char[] newPassword) {
+    public static ArrayList encrypt(String newURL, String newUser, char[] newPassword, char[] masterPass) {
 
         // Call scrypt function
-        SecretKey key = scrypt(charPwd, globalSalt);
+        SecretKey key = scrypt(masterPass, globalSalt);
 
         // Encrypt using GCM
         Cipher aesCipher = null;
@@ -97,7 +107,9 @@ public class Scrypt_Encrypt_Decrypt {
             Logger.getLogger(Scrypt_Encrypt_Decrypt.class.getName()).log(Level.SEVERE, null, ex);
         }
         char[] msg = newPassword;
-        // msg = new String(newPassword);
+        
+        aesCipher.updateAAD(newURL.getBytes(Charset.forName("UTF-8")));
+        aesCipher.updateAAD(newUser.getBytes(Charset.forName("UTF-8")));
 
         byte[] passwordBytes = new String(msg).getBytes(StandardCharsets.US_ASCII);
         byte[] ciphertext = null;
@@ -113,10 +125,10 @@ public class Scrypt_Encrypt_Decrypt {
 
     } // End 'main' method
 
-    public static byte[] decrypt(String ct, String IV) {
+    public static byte[] decrypt(String ct, String IV, char[] masterPass) throws IOException {
 
         int tagSize = 128; // 128-bit authentication tag.
-        SecretKey key = scrypt(charPwd, globalSalt);
+        SecretKey key = scrypt(masterPass, globalSalt);
         byte[] keyBytes = key.getEncoded();
 
         // Set up an AES cipher object.
@@ -128,7 +140,7 @@ public class Scrypt_Encrypt_Decrypt {
         }
 
         // Setup the key.
-        SecretKeySpec aesKey = new SecretKeySpec(keyBytes, "AES");
+        SecretKeySpec aesKey = new SecretKeySpec(keyBytes, "AES/GCM/NoPadding");
 
         try {
             // Put the cipher in encrypt mode with the specified key.
@@ -136,21 +148,35 @@ public class Scrypt_Encrypt_Decrypt {
         } catch (InvalidKeyException | InvalidAlgorithmParameterException ex) {
             Logger.getLogger(Scrypt_Encrypt_Decrypt.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*
+        Grab salt from file
+         */
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(new File(VaultManager.getFILE_NAME()));
+        saltString = rootNode.get(0).get("salt").asText();
+        globalSalt = Base64.getDecoder().decode(saltString);
+
+        // Grab account values given salt and url
+        AccountValue accountValues = vaultManager.getAccountFromVault(vaultManager.getVault(saltString), myGUI_1.existingWebsite_textField.getText());
+
+        if (accountValues != null) {
+            // Parameters to be passed in
+            finalURL = accountValues.getUrl();
+            finalUser = accountValues.getUsername();
+            aesCipher.updateAAD(finalURL.getBytes(Charset.forName("UTF-8")));
+            aesCipher.updateAAD(finalUser.getBytes(Charset.forName("UTF-8")));
+        }
 
         // Finalize the message.
         byte[] plaintext = null;
         try {
             plaintext = aesCipher.doFinal(Base64.getDecoder().decode(ct));
         } catch (IllegalBlockSizeException | BadPaddingException ex) {
-            Logger.getLogger(Scrypt_Encrypt_Decrypt.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
 
         return plaintext;
 
     } // End 'decrypt' method
-
-    public static char[] getCharPwd() {
-        return charPwd;
-    }
 
 } // End 'Scrypt_Encrypt_Decrypt' class
